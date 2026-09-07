@@ -73,7 +73,24 @@ JDK 17+, Android SDK 37. No signing config is required for a debug build.
 Deliberately absent: no dependency injection framework (the graph is one database, one
 DataStore and four repositories — it fits in `AppContainer`); no `kotlinx-datetime` or
 desugaring (`minSdk 26` is exactly where `java.time` is native); no PDF library; no image
-loader; no analytics, crash reporting, Firebase or Play Services.
+loader (every photo is already local and downscaled to 1024 px, so loading one is "read a
+small JPEG"); no `androidx.exifinterface` (the platform one reads from a stream from API
+24); no Glance (it pulls in WorkManager, which declares `ACCESS_NETWORK_STATE` — the
+widget is plain `RemoteViews`); no analytics, crash reporting, Firebase or Play Services.
+
+## Tests
+
+`./gradlew check` runs 70 unit tests and the manifest check. Two of them are worth
+pointing at:
+
+The PDF tests parse the **emitted bytes**, not the writer's internals — they walk the xref
+table to confirm every offset points at the object it claims, assert each checkbox has both
+appearance states, and check that Serbian text never leaves as a Latin-1 literal. A PDF is
+correct exactly when what was written can be read back.
+
+The seed tests assert that every item key the wizard rules mention actually exists in the
+seed. A rule pointing at a missing key silently does nothing, so "beach" would ship without
+a swimsuit and nobody would find out until the airport.
 
 ## Licence
 
