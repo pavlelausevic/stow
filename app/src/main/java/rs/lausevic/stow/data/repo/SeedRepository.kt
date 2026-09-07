@@ -92,7 +92,11 @@ class SeedRepository(
     fun read(): SeedFile =
         assets.open(SEED_PATH).bufferedReader().use { json.decodeFromString(SeedFile.serializer(), it.readText()) }
 
-    private suspend fun apply(file: SeedFile) {
+    /**
+     * Vidljivo modulu radi testova: `applyIfNeeded` cita `seedVersion` iz DataStore-a,
+     * koji je procesno globalan, pa test ne bi mogao da krene od praznog stanja.
+     */
+    internal suspend fun apply(file: SeedFile) {
         val sections = file.sections.associateBy { it.key }
 
         file.travellers.forEachIndexed { index, seed ->

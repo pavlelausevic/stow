@@ -45,8 +45,15 @@ interface CatalogDao {
     @Query("SELECT * FROM catalog_item WHERE seedKey = :seedKey LIMIT 1")
     suspend fun bySeedKey(seedKey: String): CatalogItemEntity?
 
-    @Query("SELECT * FROM catalog_item WHERE normalizedName = :normalized LIMIT 1")
-    suspend fun byNormalizedName(normalized: String): CatalogItemEntity?
+    /**
+     * SVI redovi sa datim normalizovanim nazivom, ne samo prvi.
+     *
+     * Naziv nije jedinstven i ne moze da bude: "Kupaci kostim" je i stvar koju pakujes i
+     * podsetnik da ga pokupis sa terase pre odlaska. To su dve razlicite stavke sa istim
+     * imenom, pa poklapanje po prirodnom kljucu mora da gleda i `seedKey`.
+     */
+    @Query("SELECT * FROM catalog_item WHERE normalizedName = :normalized")
+    suspend fun allByNormalizedName(normalized: String): List<CatalogItemEntity>
 
     @Query("SELECT * FROM catalog_item")
     suspend fun all(): List<CatalogItemEntity>

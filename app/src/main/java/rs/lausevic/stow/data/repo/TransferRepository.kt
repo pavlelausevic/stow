@@ -150,18 +150,30 @@ class TransferRepository(
             val catalogByUuid = mutableMapOf<String, Long>()
             backup.catalog.forEach { dto ->
                 val existing = catalogDao.byUuid(dto.uuid)
-                    ?: catalogDao.byNormalizedName(dto.normalizedName)
+                    ?: catalogDao.allByNormalizedName(dto.normalizedName)
+                        // Prirodni kljuc je naziv PLUS seedKey. Dve seed stavke sa
+                        // razlicitim kljucevima su razlicite stvari ma koliko se isto
+                        // zvale, i spajanje bi tiho pojelo jednu od njih.
+                        .firstOrNull { it.seedKey == dto.seedKey }
                 if (existing == null) {
                     catalogByUuid[dto.uuid] = catalogDao.insert(dto.toEntity())
                     added++
                 } else {
-                    // Poklopili se po prirodnom kljucu a UUID-i se razlikuju: lokalni red
-                    // preuzima UUID iz kopije i od sada su isti red zauvek.
-                    val merged = dto.toEntity().copy(id = existing.id)
-                    if (dto.updatedAt >= existing.updatedAt) {
-                        catalogDao.update(merged)
-                        updated++
-                    }
+                    /*
+                     * Poklopili se po prirodnom kljucu a UUID-i se razlikuju.
+                     *
+                     * IDENTITET se preuzima uvek, bez obzira koja je strana novija:
+                     * lokalni red uzima UUID iz kopije i od sada su isti red zauvek.
+                     * Da se usvajanje vezalo za `updatedAt`, dva reda bi ostala razdvojena
+                     * i sledeci uvoz bi napravio duplikat.
+                     *
+                     * SADRZAJ ide za novijim `updatedAt` — lokalna izmena novija od kopije
+                     * se ne gazi.
+                     */
+                    val newer = dto.updatedAt >= existing.updatedAt
+                    val merged = if (newer) dto.toEntity() else existing
+                    catalogDao.update(merged.copy(id = existing.id, uuid = dto.uuid))
+                    if (newer) updated++
                     catalogByUuid[dto.uuid] = existing.id
                 }
             }
@@ -173,10 +185,10 @@ class TransferRepository(
                     travellerByUuid[dto.uuid] = travellerDao.insert(dto.toEntity())
                     added++
                 } else {
-                    if (dto.updatedAt >= existing.updatedAt) {
-                        travellerDao.update(dto.toEntity().copy(id = existing.id))
-                        updated++
-                    }
+                    val newer = dto.updatedAt >= existing.updatedAt
+                    val merged = if (newer) dto.toEntity() else existing
+                    travellerDao.update(merged.copy(id = existing.id, uuid = dto.uuid))
+                    if (newer) updated++
                     travellerByUuid[dto.uuid] = existing.id
                 }
             }
