@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package rs.lausevic.stow.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import rs.lausevic.stow.data.model.CatalogSort
 import rs.lausevic.stow.data.model.ItemKind
 import rs.lausevic.stow.ui.components.BottomDestination
 import rs.lausevic.stow.ui.components.EmptyState
+import rs.lausevic.stow.ui.components.IconAction
 import rs.lausevic.stow.ui.components.FilterRow
 import rs.lausevic.stow.ui.components.ItemGroup
 import rs.lausevic.stow.ui.components.ItemTitle
@@ -38,6 +40,7 @@ import rs.lausevic.stow.ui.components.PillTone
 import rs.lausevic.stow.ui.components.RowDivider
 import rs.lausevic.stow.ui.components.SectionHeader
 import rs.lausevic.stow.ui.components.StowBottomBar
+import rs.lausevic.stow.ui.components.StowIcons
 import rs.lausevic.stow.ui.components.StowScreen
 import rs.lausevic.stow.ui.components.StowTopBar
 import java.time.Instant
@@ -54,6 +57,8 @@ fun CatalogueScreen(
     onSelectTab: (BottomDestination) -> Unit,
 ) {
     var sort by remember { mutableStateOf(CatalogSort.MOST_USED) }
+    var editing by remember { mutableStateOf<CatalogItemEntity?>(null) }
+    var adding by remember { mutableStateOf(false) }
     val items by container.catalog.observe(sort).collectAsState(initial = emptyList())
     val itemCount by container.catalog.observeItemCount().collectAsState(initial = 0)
     val taskCount by container.catalog.observeTaskCount().collectAsState(initial = 0)
@@ -65,6 +70,13 @@ fun CatalogueScreen(
             StowTopBar(
                 title = stringResource(R.string.catalogue_title),
                 subtitle = stringResource(R.string.catalogue_subtitle, itemCount, taskCount),
+                actions = {
+                    IconAction(
+                        icon = StowIcons.Add,
+                        description = stringResource(R.string.catalogue_add),
+                        onClick = { adding = true },
+                    )
+                },
             )
         },
         bottomBar = { StowBottomBar(destinations, route, onSelectTab) },
@@ -118,7 +130,7 @@ fun CatalogueScreen(
                         item(key = "grp-$section") {
                             ItemGroup {
                                 sectionItems.forEachIndexed { index, entry ->
-                                    CatalogueRow(entry)
+                                    CatalogueRow(entry, onClick = { editing = entry })
                                     if (index != sectionItems.lastIndex) RowDivider()
                                 }
                             }
@@ -128,13 +140,21 @@ fun CatalogueScreen(
             }
         }
     }
+
+    if (adding) {
+        CatalogueEditSheet(container = container, existing = null, onDismiss = { adding = false })
+    }
+    editing?.let { item ->
+        CatalogueEditSheet(container = container, existing = item, onDismiss = { editing = null })
+    }
 }
 
 @Composable
-private fun CatalogueRow(item: CatalogItemEntity) {
+private fun CatalogueRow(item: CatalogItemEntity, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(11.dp),
         verticalAlignment = Alignment.Top,
