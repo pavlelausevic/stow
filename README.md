@@ -65,7 +65,7 @@ JDK 17+, Android SDK 37. No signing config is required for a debug build.
 | Dependency | Why |
 |---|---|
 | Jetpack Compose + Material 3 | The UI toolkit. Material 3 supplies the colour-scheme plumbing; the palette itself is fixed and dynamic colour is off. |
-| Room | The database, with exported schemas committed and migration tests. |
+| Room | The database, with exported schemas committed and asserted against the code. |
 | DataStore | Four settings and a seed version. |
 | navigation-compose | Type-safe routes between eight destinations. |
 | kotlinx-serialization | JSON export/import and the seed file. |
@@ -80,7 +80,7 @@ widget is plain `RemoteViews`); no analytics, crash reporting, Firebase or Play 
 
 ## Tests
 
-`./gradlew check` runs 70 unit tests and the manifest check. Two of them are worth
+`./gradlew check` runs 72 unit tests and the manifest check. Three of them are worth
 pointing at:
 
 The PDF tests parse the **emitted bytes**, not the writer's internals — they walk the xref
@@ -91,6 +91,11 @@ correct exactly when what was written can be read back.
 The seed tests assert that every item key the wizard rules mention actually exists in the
 seed. A rule pointing at a missing key silently does nothing, so "beach" would ship without
 a swimsuit and nobody would find out until the airport.
+
+The schema test compares the committed schema against the database the code actually
+creates. There are no migrations yet — the schema is at version 1 — but a schema file that
+has drifted from the code is a migration written against a document that lies, and that is
+cheaper to prevent than to debug.
 
 ## Licence
 
