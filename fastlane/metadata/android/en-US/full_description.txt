@@ -1,0 +1,17 @@
+Stow is an offline packing checklist built around a personal catalogue of the things you
+actually own.
+
+Quantities come from explicit rules resolved against trip length: socks are one per night
+plus a spare, capped at ten; a passport is one. Items move through three states, not two —
+"to buy" is a pre-trip errand, not an unpacked item, and it never counts towards progress.
+
+A second mode covers the other half of the problem. As often as you forget to pack
+something, you leave it behind: a charger in the socket behind the bed, laundry on the
+balcony, food in the fridge. The return list tracks what came home and remembers what
+didn't, so the charger you keep forgetting eventually says so.
+
+Trips export as PDFs whose checkboxes are real form fields, so you can send one to whoever
+you are travelling with and they can tick it in any reader.
+
+The app has no network capability at all — the merged manifest contains no permissions,
+and the build fails if one appears.

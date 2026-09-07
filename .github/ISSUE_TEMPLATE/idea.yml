@@ -1,0 +1,16 @@
+name: Idea
+description: Suggest something
+labels: [idea]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read the "Explicitly not building" list in ARCHITECTURE.md and the README first —
+        weather, sync, accounts and collaboration are deliberate omissions, not gaps.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What goes wrong today, on a real trip. Not the solution — the problem.
+    validations:
+      required: true

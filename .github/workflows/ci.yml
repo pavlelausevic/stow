@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit tests
+        run: ./gradlew test --stacktrace
+
+      # Cita SPOJENI manifest i pada ako se pojavi ijedna dozvola — ukljucujuci one
+      # koje ubaci neka biblioteka. Ovo je provera koja je vec izbacila Glance.
+      - name: No permissions in the merged manifest
+        run: ./gradlew :app:verifyReleaseHasNoPermissions --stacktrace
+
+      - name: Assemble release
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Permission report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: permission-report
+          path: app/build/reports/permissions/

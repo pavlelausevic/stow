@@ -1,0 +1,16 @@
+Stow je offline lista za pakovanje, gradjena oko licnog kataloga stvari koje posedujes.
+
+Kolicine dolaze iz eksplicitnih pravila razresenih prema duzini putovanja: carape su jedan
+par po noci plus rezerva, najvise deset; pasos je jedan. Stavke imaju tri stanja, ne dva —
+"nabaviti" je predputna obaveza, a ne nespakovana stavka, i nikad ne ulazi u napredak.
+
+Drugi rezim pokriva drugu polovinu problema. Koliko cesto zaboravis da spakujes nesto,
+toliko cesto i ostavis nesto za sobom: punjac u uticnici iza kreveta, ves na terasi, hranu
+u frizideru. Lista povratka prati sta je doslo kuci i pamti sta nije, pa punjac koji stalno
+zaboravljas na kraju to i kaze.
+
+Putovanja se izvoze u PDF cije su kvacice prava polja obrasca, pa se lista moze poslati
+sarpuniku i stiklirati u bilo kom citacu.
+
+Aplikacija nema nikakvu mreznu sposobnost — spojeni manifest nema nijednu dozvolu, a build
+pada ako se ijedna pojavi.
