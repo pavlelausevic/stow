@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="48" android:viewportHeight="48">
+    <path android:pathData="M24,14 L24,34 M14,24 L34,24"
+        android:strokeColor="#141719" android:strokeWidth="4"
+        android:strokeLineCap="round" />
+</vector>
