@@ -20,3 +20,6 @@ local.properties
 /keystore.properties
 *.jks
 *.keystore
+
+# Ni gotovi APK-ovi — build artefakt, ne izvorni kod.
+*.apk

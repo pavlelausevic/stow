@@ -1,6 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import com.android.build.api.artifact.SingleArtifact
+import java.util.Properties
+
+/*
+ * Potpisni kljuc se cita iz keystore.properties, koji je u .gitignore zajedno sa .jks
+ * fajlom. Ako ga nema — na tudjem klonu ili na CI-ju — release se i dalje gradi, samo
+ * nepotpisan. Build koji pada zato sto stranac nema moj kljuc bio bi besmislen.
+ */
+val signing = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
 
 plugins {
     alias(libs.plugins.android.application)
@@ -23,8 +34,25 @@ android {
         resourceConfigurations += setOf("en", "sr")
     }
 
+    signingConfigs {
+        if (signing.getProperty("storeFile") != null) {
+            create("release") {
+                storeFile = rootProject.file(signing.getProperty("storeFile"))
+                storePassword = signing.getProperty("storePassword")
+                keyAlias = signing.getProperty("keyAlias")
+                keyPassword = signing.getProperty("keyPassword")
+                // v1 nije potreban: minSdk je 26, a JAR potpis pokriva samo do API 24.
+                // v3 nosi rotaciju kljuca — jeftino sada, nemoguce naknadno.
+                enableV1Signing = false
+                enableV2Signing = true
+                enableV3Signing = true
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
