@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <!-- Navigacija -->
+    <string name="nav_trips">Putovanja</string>
+    <string name="nav_catalogue">Katalog</string>
+    <string name="nav_shopping">Nabavka</string>
+    <string name="nav_settings">Podešavanja</string>
+    <string name="action_back">Nazad</string>
+    <string name="action_search">Pretraga</string>
+    <string name="action_sort">Sortiranje</string>
+    <string name="action_more">Još</string>
+    <string name="action_add">Dodaj</string>
+    <string name="action_save">Sačuvaj</string>
+    <string name="action_cancel">Odustani</string>
+    <string name="action_ok">U redu</string>
+    <string name="action_edit">Izmeni</string>
+    <string name="action_archive">Arhiviraj</string>
+    <string name="action_delete">Obriši</string>
+    <string name="action_undo">Opozovi</string>
+    <string name="action_close">Zatvori</string>
+    <string name="action_share">Pošalji</string>
+
+    <!-- Putovanja -->
+    <string name="trips_title">Putovanja</string>
+    <string name="trips_subtitle">%1$d aktivnih · %2$d arhiviranih</string>
+    <string name="trips_empty_title">Nijedno putovanje</string>
+    <string name="trips_empty_body">Katalog je već pun — %1$d stavki i %2$d zadataka ušlo je pri prvom pokretanju. Fali samo odredište i broj noći.</string>
+    <string name="trips_empty_action">Napravi putovanje</string>
+    <string name="trips_empty_secondary">ili pogledaj katalog</string>
+    <string name="trips_progress">%1$d/%2$d spakovano</string>
+    <string name="trips_to_buy_count">%1$d za nabavku</string>
+    <string name="trips_created_recently">napravljeno nedavno</string>
+    <string name="trips_archived">arhivirano</string>
+    <string name="trips_left_behind_count">%1$d ostavljeno</string>
+    <string name="trips_returned_on">vraćeno %1$s</string>
+    <string name="trips_nights">%1$d noći</string>
+
+    <!-- Putovanje -->
+    <string name="trip_mode_packing">Pakovanje</string>
+    <string name="trip_mode_returning">Povratak</string>
+    <string name="trip_mode_toggle">Promeni režim</string>
+    <string name="trip_returned_progress">%1$d/%2$d vraćeno</string>
+    <string name="filter_all">Sve</string>
+    <string name="filter_to_buy">Nabaviti</string>
+    <string name="filter_to_pack">Za pakovanje</string>
+    <string name="filter_packed">Spakovano</string>
+    <string name="group_by_section">Po sekciji</string>
+    <string name="group_by_bag">Po torbi</string>
+    <string name="group_by_traveller">Po putniku</string>
+    <string name="section_not_taken">Nije poneto · ne broji se</string>
+    <string name="trip_tidy">Sredi</string>
+    <string name="trip_tidy_explained">Prebacuje spakovano na dno, jednom</string>
+    <string name="trip_uncheck_all">Skini sve kvačice</string>
+    <string name="trip_complete_section">Označi celu sekciju</string>
+    <string name="trip_assign_section">Dodeli celu sekciju</string>
+    <string name="trip_finish">Završi putovanje</string>
+    <string name="trip_export_pdf">Izvezi u PDF</string>
+    <string name="trip_add_item">Dodaj stavku</string>
+    <string name="trip_search_hint">Pretraži ovo putovanje</string>
+    <string name="trip_suggestions">Često nosiš</string>
+    <string name="trip_empty_title">Lista je prazna</string>
+    <string name="trip_empty_body">Prazno putovanje je sasvim dobra polazna tačka. Dodaj sekciju ili povuci stavke iz kataloga.</string>
+    <string name="trip_filter_empty_title">Nema pogodaka</string>
+    <string name="trip_filter_empty_body">Nijedna stavka na ovom putovanju trenutno nije u tom stanju.</string>
+
+    <!-- Stanja -->
+    <string name="state_to_pack">Za pakovanje</string>
+    <string name="state_to_buy">Nabaviti</string>
+    <string name="state_packed">Spakovano</string>
+    <string name="state_returned">Vraćeno</string>
+    <string name="state_mark_to_buy">Označi za nabavku</string>
+    <string name="state_bought">Kupljeno</string>
+    <string name="a11y_item_state">%1$s, %2$s</string>
+
+    <!-- Torbe -->
+    <string name="bag_checked">Predati</string>
+    <string name="bag_carry_on">Ručni</string>
+    <string name="bag_personal">Lični</string>
+    <string name="bag_unassigned">Neraspoređeno</string>
+
+    <!-- Smeštaj -->
+    <string name="accommodation_hotel">Hotel</string>
+    <string name="accommodation_apartment">Apartman</string>
+    <string name="accommodation_camping">Kampovanje</string>
+    <string name="accommodation_family">Kod rodbine</string>
+
+    <!-- Aktivnosti -->
+    <string name="activity_beach">Plaža</string>
+    <string name="activity_hiking">Planinarenje</string>
+    <string name="activity_business">Poslovno</string>
+    <string name="activity_driving">Vožnja</string>
+    <string name="activity_gym">Teretana</string>
+    <string name="activity_formal">Svečana večera</string>
+
+    <!-- Čarobnjak -->
+    <string name="wizard_title">Novo putovanje</string>
+    <string name="wizard_step">Korak %1$d od %2$d</string>
+    <string name="wizard_name">Naziv</string>
+    <string name="wizard_destination">Odredište</string>
+    <string name="wizard_accommodation">Smeštaj</string>
+    <string name="wizard_nights">Noći</string>
+    <string name="wizard_travellers">Putnici</string>
+    <string name="wizard_activities">Aktivnosti</string>
+    <string name="wizard_dates">Datumi</string>
+    <string name="wizard_start_date">Polazak</string>
+    <string name="wizard_end_date">Povratak</string>
+    <string name="wizard_no_dates">Još bez datuma</string>
+    <string name="wizard_rules_preview">Pravila koja će se primeniti</string>
+    <string name="wizard_back">Nazad</string>
+    <string name="wizard_next">Dalje</string>
+    <string name="wizard_compose">Sastavi listu</string>
+    <string name="wizard_source">Kreni od</string>
+    <string name="wizard_source_template">Šablona</string>
+    <string name="wizard_source_trip">Ranijeg putovanja</string>
+    <string name="wizard_source_empty">Prazne liste</string>
+
+    <!-- Zašto je ovo ovde -->
+    <string name="why_title">Zašto je ovo ovde?</string>
+    <string name="why_body">%1$s nije bilo u šablonu. Dodalo ga je jedno pravilo.</string>
+    <string name="why_rule">Pravilo</string>
+    <string name="why_remove">Ukloni stavku</string>
+    <string name="why_manual">Ovu stavku si dodao sam, pa nema pravila iza nje.</string>
+    <string name="why_template">Stavka je došla iz šablona od kog si krenuo.</string>
+
+    <!-- Objašnjenja pravila -->
+    <string name="rule_accommodation_apartment">U apartmanu se kuva, pa sa sobom idu kuhinja i održavanje.</string>
+    <string name="rule_accommodation_hotel">Hotel daje peškire, fen i gel za tuširanje, pa oni ostaju kod kuće.</string>
+    <string name="rule_nights_gte5">Od pet noći naviše odeća se rotira, pa se dodaje sekcija za održavanje. Za kraće se ne dodaje.</string>
+    <string name="rule_nights_gte14">Preko dve nedelje se pere, a ne pakuje: donji veš i čarape prelaze na fiksnih deset uz plan pranja na pola puta.</string>
+    <string name="rule_activity_beach">Označio si plažu.</string>
+    <string name="rule_activity_hiking">Označio si planinarenje.</string>
+    <string name="rule_activity_business">Označio si poslovno putovanje.</string>
+    <string name="rule_activity_driving">Označio si vožnju.</string>
+    <string name="rule_activity_gym">Označio si teretanu.</string>
+    <string name="rule_activity_formal">Označio si svečanu večeru.</string>
+    <string name="rule_core">Deo osnovne liste koja ide svuda.</string>
+
+    <!-- Pravila količine -->
+    <string name="quantity_fixed">Fiksno · %1$d</string>
+    <string name="quantity_unspecified">Neodređeno</string>
+    <string name="quantity_per_nights">%1$d po noći</string>
+    <string name="quantity_per_nights_n">1 na %1$d noći</string>
+    <string name="quantity_plus">, +%1$d</string>
+    <string name="quantity_cap">, max %1$d</string>
+
+    <!-- Katalog -->
+    <string name="catalogue_title">Katalog</string>
+    <string name="catalogue_subtitle">%1$d stavki · %2$d zadataka</string>
+    <string name="catalogue_sort_most_used">Najkorišćenije</string>
+    <string name="catalogue_sort_unused">Nekorišćeno preko godinu</string>
+    <string name="catalogue_sort_alphabetical">Po azbuci</string>
+    <string name="catalogue_filter_tasks">Zadaci</string>
+    <string name="catalogue_used_times">korišćeno %1$d×</string>
+    <string name="catalogue_last_used">poslednji put %1$s</string>
+    <string name="catalogue_never_used">nikad korišćeno</string>
+    <string name="catalogue_left_behind">zaboravljeno %1$d×</string>
+    <string name="catalogue_empty_title">Katalog je prazan</string>
+    <string name="catalogue_empty_body">Ovo ne bi trebalo da se desi — seed se izvršava pri prvom pokretanju. Uvezi kopiju ili dodaj prvu stavku ručno.</string>
+    <string name="catalogue_unused_empty_title">Ništa ne skuplja prašinu</string>
+    <string name="catalogue_unused_empty_body">Sve iz kataloga bilo je na nekom putovanju u poslednjih godinu dana.</string>
+    <string name="catalogue_add">Nova stavka kataloga</string>
+    <string name="catalogue_field_name">Naziv</string>
+    <string name="catalogue_field_kind">Vrsta</string>
+    <string name="catalogue_field_bag">Torba</string>
+    <string name="catalogue_field_quantity">Količina</string>
+    <string name="catalogue_field_section">Sekcija</string>
+    <string name="catalogue_field_note">Napomena</string>
+    <string name="catalogue_field_photo">Fotografija</string>
+    <string name="catalogue_photo_add">Dodaj fotografiju</string>
+    <string name="catalogue_photo_replace">Zameni fotografiju</string>
+    <string name="catalogue_photo_remove">Ukloni fotografiju</string>
+    <string name="catalogue_kind_item">Predmet</string>
+    <string name="catalogue_kind_task">Zadatak</string>
+    <string name="catalogue_archived">Arhivirano</string>
+    <string name="catalogue_restore">Vrati</string>
+    <string name="catalogue_archive_explained">Arhiviranje je drži van novih putovanja. Putovanja koja je već koriste ostaju netaknuta — ništa se nikad ne briše zaista.</string>
+
+    <!-- Poklapanje sličnih -->
+    <string name="fuzzy_title">Već postoji u katalogu?</string>
+    <string name="fuzzy_body">Ovo liči na „%1$s“. Dodavanje bliskog duplikata je način na koji katalog postane haos.</string>
+    <string name="fuzzy_use_existing">Uzmi ovu</string>
+    <string name="fuzzy_add_anyway">Ipak dodaj novu</string>
+
+    <!-- Putnici -->
+    <string name="travellers_title">Putnici</string>
+    <string name="traveller_shared">Zajedničko</string>
+    <string name="traveller_add">Dodaj putnika</string>
+    <string name="traveller_name">Ime</string>
+    <string name="traveller_everyone">Svi</string>
+    <string name="travellers_empty_title">Nema putnika</string>
+    <string name="travellers_empty_body">Dva unosa ulaze pri prvom pokretanju. Dodaj bar jednog da bi dodela stavki opet radila.</string>
+
+    <!-- Nabavka -->
+    <string name="shopping_title">Nabavka</string>
+    <string name="shopping_subtitle">%1$d stavki · %2$d putovanja</string>
+    <string name="shopping_empty_title">Nema šta da se kupi</string>
+    <string name="shopping_empty_body">Ništa na aktivnim putovanjima nije označeno za nabavku. Dugi pritisak na stavku je stavlja ovde.</string>
+    <string name="shopping_bought_note">kupljeno · vraćeno u listu za pakovanje</string>
+    <string name="shopping_export">Izvezi spisak</string>
+
+    <!-- Povratak -->
+    <string name="return_title">Kraj putovanja</string>
+    <string name="return_summary_returned">Vraćeno</string>
+    <string name="return_left_behind">Ostalo iza tebe</string>
+    <string name="return_left_behind_none">Sve je došlo kući.</string>
+    <string name="return_first_time">prvi put</string>
+    <string name="return_now_total">sada ukupno %1$d puta</string>
+    <string name="return_writeback">Oba se upisuju u katalog kao brojač zaboravljanja. Od sledećeg putovanja stoje na vrhu sekcije za povratak.</string>
+    <string name="return_close_trip">Zatvori putovanje</string>
+    <string name="return_empty_title">Nema šta da se pokupi</string>
+    <string name="return_empty_body">Ništa sa ovog putovanja nije spakovano, pa još nema šta da se nosi kući.</string>
+
+    <!-- Izvoz u PDF -->
+    <string name="export_title">Izvoz u PDF</string>
+    <string name="export_who">Za koga</string>
+    <string name="export_who_one">%1$s + zajedničko</string>
+    <string name="export_which_list">Lista</string>
+    <string name="export_grouping">Grupisanje</string>
+    <string name="export_include_to_buy">Uključi stavke za nabavku</string>
+    <string name="export_include_to_buy_note">Dodaje zaseban blok na kraj</string>
+    <string name="export_summary">%1$d stavki · %2$d strane</string>
+    <string name="export_interactive_note">Kvačice su prava polja obrasca — štikliraju se u bilo kom čitaču.</string>
+    <string name="export_save">Sačuvaj</string>
+    <string name="export_send">Pošalji</string>
+    <string name="export_done">PDF je izvezen</string>
+    <string name="export_failed">PDF nije mogao da se upiše: %1$s</string>
+
+    <!-- Podešavanja -->
+    <string name="settings_title">Podešavanja</string>
+    <string name="settings_version">Stow %1$s · build %2$d</string>
+    <string name="settings_group_display">Prikaz</string>
+    <string name="settings_group_data">Podaci</string>
+    <string name="settings_group_about">O aplikaciji</string>
+    <string name="settings_language">Jezik</string>
+    <string name="settings_language_system">Sistem</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_theme_light">Svetla</string>
+    <string name="settings_theme_dark">Tamna</string>
+    <string name="settings_default_grouping">Podrazumevano grupisanje</string>
+    <string name="settings_sort_checked">Štiklirano na dno</string>
+    <string name="settings_sort_checked_note">Samo na radnju „Sredi“, nikad u hodu</string>
+    <string name="settings_export">Izvoz svih podataka</string>
+    <string name="settings_export_note">JSON · jedina kopija koja postoji</string>
+    <string name="settings_import">Uvoz</string>
+    <string name="settings_import_note">Dodaje, nikad ne briše</string>
+    <string name="settings_travellers">Putnici</string>
+    <string name="settings_catalogue">Uredi katalog</string>
+    <string name="settings_source">Izvorni kod na GitHub-u</string>
+    <string name="settings_source_note">Otvara browser · bez mrežne dozvole</string>
+    <string name="settings_licences">Licence</string>
+    <string name="settings_licences_note">Apache-2.0</string>
+    <string name="settings_no_browser">Nijedna aplikacija na ovom uređaju ne ume da otvori link.</string>
+
+    <!-- Uvoz / izvoz -->
+    <string name="import_done">Uvezeno: %1$d novih, %2$d izmenjenih</string>
+    <string name="import_failed">Uvoz nije uspeo: %1$s</string>
+    <string name="import_bad_version">Ovaj fajl je napisala novija verzija Stow-a (šema %1$d).</string>
+    <string name="import_bad_format">Ovo nije Stow fajl.</string>
+    <string name="export_data_done">Podaci su izvezeni</string>
+
+    <!-- Vidžet i prečice -->
+    <string name="widget_description">Napredak tekućeg putovanja i šta je još nespakovano.</string>
+    <string name="widget_no_trip">Nema aktivnog putovanja</string>
+    <string name="widget_nothing_left">Sve spakovano</string>
+    <string name="widget_more_items">i još %1$d</string>
+    <string name="shortcut_new_trip_short">Novo putovanje</string>
+    <string name="shortcut_new_trip_long">Započni novo putovanje</string>
+    <string name="shortcut_shopping_short">Nabavka</string>
+    <string name="shortcut_shopping_long">Otvori spisak za nabavku</string>
+
+    <!-- Greške i potvrde -->
+    <string name="error_name_required">Naziv je obavezan.</string>
+    <string name="error_nights_range">Broj noći mora biti između 1 i 365.</string>
+    <string name="error_quantity_positive">Količina mora biti bar 1.</string>
+    <string name="deleted_with_undo">Obrisano „%1$s“</string>
+    <string name="section_deleted_with_undo">Obrisana sekcija „%1$s“</string>
+
+    <!--
+        Srpski ima tri oblika: one (1, 21, 31…), few (2–4, 22–24…), other (5–20, 25…).
+        1 stavka / 2 stavke / 5 stavki.
+    -->
+    <plurals name="items_count">
+        <item quantity="one">%1$d stavka</item>
+        <item quantity="few">%1$d stavke</item>
+        <item quantity="other">%1$d stavki</item>
+    </plurals>
+    <plurals name="nights_count">
+        <item quantity="one">%1$d noć</item>
+        <item quantity="few">%1$d noći</item>
+        <item quantity="other">%1$d noći</item>
+    </plurals>
+    <plurals name="trips_count">
+        <item quantity="one">%1$d putovanje</item>
+        <item quantity="few">%1$d putovanja</item>
+        <item quantity="other">%1$d putovanja</item>
+    </plurals>
+</resources>
