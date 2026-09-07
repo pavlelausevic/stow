@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="new_trip"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_new_trip"
+        android:shortcutShortLabel="@string/shortcut_new_trip_short"
+        android:shortcutLongLabel="@string/shortcut_new_trip_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="rs.lausevic.stow"
+            android:targetClass="rs.lausevic.stow.MainActivity"
+            android:data="stow://new-trip" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="shopping"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_shopping"
+        android:shortcutShortLabel="@string/shortcut_shopping_short"
+        android:shortcutLongLabel="@string/shortcut_shopping_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="rs.lausevic.stow"
+            android:targetClass="rs.lausevic.stow.MainActivity"
+            android:data="stow://shopping" />
+    </shortcut>
+</shortcuts>

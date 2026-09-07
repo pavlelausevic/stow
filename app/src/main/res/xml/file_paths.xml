@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<paths>
+    <!-- Izvezeni PDF i JSON žive ovde i dele se isključivo kroz FileProvider. -->
+    <cache-path name="exports" path="exports/" />
+</paths>

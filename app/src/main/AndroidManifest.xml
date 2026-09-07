@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+    Ovde namerno nema nijedne <uses-permission> linije.
+
+    Nema INTERNET jer aplikacija nema mrežni kod; nema POST_NOTIFICATIONS jer nema
+    podsetnika; nema READ_MEDIA_IMAGES jer fotografije idu kroz Photo Picker, koji
+    dozvolu ne traži; nema WRITE_EXTERNAL_STORAGE jer izvoz ide kroz SAF.
+
+    Zadatak verifyReleaseHasNoPermissions čita SPOJENI manifest i obara build ako se
+    ijedna dozvola pojavi — i iz ovog fajla i iz bilo koje biblioteke.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        androidx.core sam sebi deklarise potpisnu dozvolu, da bi
+        ContextCompat.registerReceiver(..., RECEIVER_NOT_EXPORTED) radio na starijim
+        API nivoima. Nije sistemska dozvola i korisnik je nikad ne vidi, ali se pojavljuje
+        u spojenom manifestu.
+
+        Stow ne registruje nijedan dinamicki receiver, pa se i deklaracija i zahtev
+        uklanjaju — tako tvrdnja "spojeni manifest nema nijednu <uses-permission>" ostaje
+        doslovno tacna i proverljiva, umesto da bude tacna uz fusnotu.
+    -->
+    <permission
+        android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        tools:node="remove" />
+    <uses-permission
+        android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        tools:node="remove" />
+
+    <application
+        android:name=".StowApp"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
+        android:supportsRtl="false"
+        android:enableOnBackInvokedCallback="true"
+        android:theme="@style/Theme.Stow">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Stow">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <receiver
+            android:name=".widget.TripWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/trip_widget_info" />
+        </receiver>
+
+        <!--
+            Play Services / WorkManager inicijalizatori ume da provuku dozvole kroz
+            biblioteke. Ovde ih nema, ali provera manifesta ostaje jedina garancija.
+        -->
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value=""
+            tools:node="remove" />
+    </application>
+</manifest>
