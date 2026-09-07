@@ -1,0 +1,20 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/app/build
+/pdf/build
+
+# Lokalni radni dokument — drži odluke i kontekst koji ne idu u javni repo.
+/HANDOFF.md
+
+# Potpisni ključ i njegove lozinke nikada ne ulaze u repo.
+/keystore.properties
+*.jks
+*.keystore

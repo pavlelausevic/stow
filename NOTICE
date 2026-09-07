@@ -1,0 +1,14 @@
+Stow
+Copyright 2026 Pavle Lausevic
+
+This product includes software developed as part of the Android Open Source Project
+and the AndroidX libraries (https://developer.android.com/jetpack/androidx),
+licensed under the Apache License, Version 2.0.
+
+Kotlin and kotlinx.serialization are Copyright 2010-2026 JetBrains s.r.o. and
+contributors, licensed under the Apache License, Version 2.0.
+
+The bundled typefaces are used under the SIL Open Font License 1.1:
+  Rubik   — Copyright 2015 The Rubik Project Authors (https://github.com/googlefonts/rubik)
+  Nunito  — Copyright 2014 The Nunito Project Authors (https://github.com/googlefonts/nunito)
+The full licence texts ship with the app in app/src/main/assets/fonts/.
