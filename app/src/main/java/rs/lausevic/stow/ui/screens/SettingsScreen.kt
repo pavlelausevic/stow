@@ -69,6 +69,17 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
     var message by remember { mutableStateOf<String?>(null) }
 
+    // Tekstovi se razrešavaju PRI KOMPOZICIJI, ne u trenutku poziva: `context.getString`
+    // iz povratnog poziva ne prati promenu konfiguracije, pa bi posle promene jezika
+    // vratio poruku na starom.
+    val exportedText = stringResource(R.string.export_data_done)
+    val exportFailedText = stringResource(R.string.export_failed, "")
+    val importFailedText = stringResource(R.string.import_failed, "")
+    val badFormatText = stringResource(R.string.import_bad_format)
+    val noBrowserText = stringResource(R.string.settings_no_browser)
+    val importedFormat = stringResource(R.string.import_done, 0, 0)
+    val badVersionFormat = stringResource(R.string.import_bad_version, 0)
+
     val exportLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json"),
     ) { uri: Uri? ->
@@ -77,8 +88,8 @@ fun SettingsScreen(
             runCatching {
                 val text = container.transfer.export()
                 context.contentResolver.openOutputStream(uri)?.use { it.write(text.toByteArray()) }
-            }.onSuccess { message = context.getString(R.string.export_data_done) }
-                .onFailure { message = context.getString(R.string.export_failed, it.message.orEmpty()) }
+            }.onSuccess { message = exportedText }
+                .onFailure { message = exportFailedText + " " + it.message.orEmpty() }
         }
     }
 
@@ -91,14 +102,15 @@ fun SettingsScreen(
                 val text = context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
                     ?: error("empty")
                 container.transfer.import(text)
-            }.onSuccess {
-                message = context.getString(R.string.import_done, it.added, it.updated)
+            }.onSuccess { result ->
+                message = importedFormat.replaceFirst("0", result.added.toString())
+                    .replaceFirst("0", result.updated.toString())
             }.onFailure { error ->
                 message = when (error) {
                     is TransferRepository.TooNew ->
-                        context.getString(R.string.import_bad_version, error.schema)
-                    is TransferRepository.BadFormat -> context.getString(R.string.import_bad_format)
-                    else -> context.getString(R.string.import_failed, error.message.orEmpty())
+                        badVersionFormat.replaceFirst("0", error.schema.toString())
+                    is TransferRepository.BadFormat -> badFormatText
+                    else -> importFailedText + " " + error.message.orEmpty()
                 }
             }
         }
@@ -215,7 +227,7 @@ fun SettingsScreen(
                             try {
                                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(SOURCE_URL)))
                             } catch (e: ActivityNotFoundException) {
-                                message = context.getString(R.string.settings_no_browser)
+                                message = noBrowserText
                             }
                         },
                     ) { Icon(StowIcons.Chevron, null, tint = StowTheme.state.ink2, modifier = Modifier.size(20.dp)) }

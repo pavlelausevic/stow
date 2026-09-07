@@ -2,7 +2,8 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <!-- English is the fallback language. Serbian (Latin) lives in values-sr. -->
 <resources>
-    <string name="app_name">Stow</string>
+    <!-- Ime aplikacije je isto na oba jezika; ne prevodi se. -->
+    <string name="app_name" translatable="false">Stow</string>
 
     <!-- Navigation -->
     <string name="nav_trips">Trips</string>
@@ -264,7 +265,7 @@
     <string name="export_data_done">Data exported</string>
 
     <!-- Widget and shortcuts -->
-    <string name="widget_label">Stow</string>
+    <string name="widget_label" translatable="false">Stow</string>
     <string name="widget_description">Progress on the current trip and what is still unpacked.</string>
     <string name="widget_no_trip">No active trip</string>
     <string name="widget_nothing_left">All packed</string>
