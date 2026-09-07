@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -79,6 +82,8 @@ fun TripDetailScreen(
 
     var filter by remember { mutableStateOf(ItemFilter.ALL) }
     var explaining by remember { mutableStateOf<TripItemEntity?>(null) }
+    var exporting by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf<String?>(null) }
 
     val current = trip ?: return
     val returning = current.mode == TripMode.RETURNING
@@ -111,6 +116,7 @@ fun TripDetailScreen(
                         visible.included.size,
                     ),
                     onBack = onBack,
+                    onExport = { exporting = true },
                     onToggleMode = {
                         scope.launch { container.trips.setMode(tripId, TripMode.PACKING) }
                     },
@@ -126,6 +132,11 @@ fun TripDetailScreen(
                         ),
                     onBack = onBack,
                     actions = {
+                        IconAction(
+                            icon = StowIcons.Share,
+                            description = stringResource(R.string.trip_export_pdf),
+                            onClick = { exporting = true },
+                        )
                         IconAction(
                             icon = StowIcons.SwapMode,
                             description = stringResource(R.string.trip_mode_toggle),
@@ -216,6 +227,35 @@ fun TripDetailScreen(
 
     explaining?.let { item ->
         WhyIsThisHereSheet(item = item, onDismiss = { explaining = null })
+    }
+
+    if (exporting) {
+        ExportSheet(
+            container = container,
+            trip = current,
+            travellers = travellers,
+            returning = returning,
+            onDismiss = { exporting = false },
+            onMessage = { message = it },
+        )
+    }
+
+    message?.let { text ->
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            Column(
+                Modifier
+                    // Koren nema insete, pa poruka mora sama da preskoci sistemsku
+                    // navigaciju — inace joj tap ode sistemskom tasteru.
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(16.dp)
+                    .clip(StowShapes.card)
+                    .background(StowTheme.state.ink)
+                    .clickable { message = null }
+                    .padding(horizontal = 16.dp, vertical = 13.dp),
+            ) {
+                Text(text, style = MaterialTheme.typography.bodyMedium, color = StowTheme.state.onInk)
+            }
+        }
     }
 }
 
@@ -376,6 +416,7 @@ private fun ReturnModeBar(
     title: String,
     subtitle: String,
     onBack: () -> Unit,
+    onExport: () -> Unit,
     onToggleMode: () -> Unit,
 ) {
     val c = StowTheme.state
@@ -404,6 +445,12 @@ private fun ReturnModeBar(
                 )
                 MicroLabel(subtitle, Modifier.padding(top = 3.dp), color = c.onInk.copy(alpha = 0.75f))
             }
+            IconAction(
+                icon = StowIcons.Share,
+                description = stringResource(R.string.trip_export_pdf),
+                onClick = onExport,
+                bordered = false,
+            )
             IconAction(
                 icon = StowIcons.SwapMode,
                 description = stringResource(R.string.trip_mode_toggle),
