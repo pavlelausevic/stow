@@ -11,8 +11,10 @@ local.properties
 /app/build
 /pdf/build
 
-# Lokalni radni dokument — drži odluke i kontekst koji ne idu u javni repo.
+# Lokalni radni dokumenti — drže odluke, originalni zahtev i mockup, tj. kontekst
+# koji strancu ne znači ništa i ne pripada javnom repou.
 /HANDOFF.md
+/docs/
 
 # Potpisni ključ i njegove lozinke nikada ne ulaze u repo.
 /keystore.properties
