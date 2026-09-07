@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <color name="window_background">#101211</color>
+    <color name="widget_ink">#E9EBE6</color>
+    <color name="widget_ink2">#B4BBB6</color>
+    <color name="widget_muted">#828C87</color>
+    <color name="widget_line">#2C312F</color>
+    <color name="widget_accent">#93AAEE</color>
+</resources>

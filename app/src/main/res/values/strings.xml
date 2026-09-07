@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- English is the fallback language. Serbian (Latin) lives in values-sr. -->
+<resources>
+    <string name="app_name">Stow</string>
+
+    <!-- Navigation -->
+    <string name="nav_trips">Trips</string>
+    <string name="nav_catalogue">Catalogue</string>
+    <string name="nav_shopping">Shopping</string>
+    <string name="nav_settings">Settings</string>
+    <string name="action_back">Back</string>
+    <string name="action_search">Search</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_more">More</string>
+    <string name="action_add">Add</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_archive">Archive</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_close">Close</string>
+    <string name="action_share">Share</string>
+
+    <!-- Trips -->
+    <string name="trips_title">Trips</string>
+    <string name="trips_subtitle">%1$d active · %2$d archived</string>
+    <string name="trips_empty_title">No trips yet</string>
+    <string name="trips_empty_body">The catalogue is already stocked — %1$d items and %2$d tasks arrived on first launch. All that is missing is a destination and a number of nights.</string>
+    <string name="trips_empty_action">Create a trip</string>
+    <string name="trips_empty_secondary">or look through the catalogue</string>
+    <string name="trips_progress">%1$d/%2$d packed</string>
+    <string name="trips_to_buy_count">%1$d to buy</string>
+    <string name="trips_created_recently">created recently</string>
+    <string name="trips_archived">archived</string>
+    <string name="trips_left_behind_count">%1$d left behind</string>
+    <string name="trips_returned_on">returned %1$s</string>
+    <string name="trips_nights">%1$d nights</string>
+
+    <!-- Trip detail -->
+    <string name="trip_mode_packing">Packing</string>
+    <string name="trip_mode_returning">Returning</string>
+    <string name="trip_mode_toggle">Switch mode</string>
+    <string name="trip_returned_progress">%1$d/%2$d returned</string>
+    <string name="filter_all">All</string>
+    <string name="filter_to_buy">To buy</string>
+    <string name="filter_to_pack">To pack</string>
+    <string name="filter_packed">Packed</string>
+    <string name="group_by_section">By section</string>
+    <string name="group_by_bag">By bag</string>
+    <string name="group_by_traveller">By traveller</string>
+    <string name="section_not_taken">Not taken · not counted</string>
+    <string name="trip_tidy">Tidy up</string>
+    <string name="trip_tidy_explained">Move packed items to the bottom, once</string>
+    <string name="trip_uncheck_all">Uncheck everything</string>
+    <string name="trip_complete_section">Complete section</string>
+    <string name="trip_assign_section">Assign section</string>
+    <string name="trip_finish">Finish trip</string>
+    <string name="trip_export_pdf">Export as PDF</string>
+    <string name="trip_add_item">Add item</string>
+    <string name="trip_search_hint">Search this trip</string>
+    <string name="trip_suggestions">You often bring</string>
+    <string name="trip_empty_title">Nothing on this list</string>
+    <string name="trip_empty_body">An empty trip is a fine starting point. Add a section, or pull items in from the catalogue.</string>
+    <string name="trip_filter_empty_title">Nothing matches</string>
+    <string name="trip_filter_empty_body">No item on this trip is in that state right now.</string>
+
+    <!-- Item states -->
+    <string name="state_to_pack">To pack</string>
+    <string name="state_to_buy">To buy</string>
+    <string name="state_packed">Packed</string>
+    <string name="state_returned">Returned</string>
+    <string name="state_mark_to_buy">Mark as to buy</string>
+    <string name="state_bought">Bought</string>
+    <string name="a11y_item_state">%1$s, %2$s</string>
+
+    <!-- Bags -->
+    <string name="bag_checked">Checked</string>
+    <string name="bag_carry_on">Carry-on</string>
+    <string name="bag_personal">Personal</string>
+    <string name="bag_unassigned">Unassigned</string>
+
+    <!-- Accommodation -->
+    <string name="accommodation_hotel">Hotel</string>
+    <string name="accommodation_apartment">Apartment</string>
+    <string name="accommodation_camping">Camping</string>
+    <string name="accommodation_family">Family</string>
+
+    <!-- Activities -->
+    <string name="activity_beach">Beach</string>
+    <string name="activity_hiking">Hiking</string>
+    <string name="activity_business">Business</string>
+    <string name="activity_driving">Driving</string>
+    <string name="activity_gym">Gym</string>
+    <string name="activity_formal">Formal dinner</string>
+
+    <!-- Wizard -->
+    <string name="wizard_title">New trip</string>
+    <string name="wizard_step">Step %1$d of %2$d</string>
+    <string name="wizard_name">Name</string>
+    <string name="wizard_destination">Destination</string>
+    <string name="wizard_accommodation">Accommodation</string>
+    <string name="wizard_nights">Nights</string>
+    <string name="wizard_travellers">Travellers</string>
+    <string name="wizard_activities">Activities</string>
+    <string name="wizard_dates">Dates</string>
+    <string name="wizard_start_date">Start</string>
+    <string name="wizard_end_date">End</string>
+    <string name="wizard_no_dates">No dates yet</string>
+    <string name="wizard_rules_preview">Rules that will apply</string>
+    <string name="wizard_back">Back</string>
+    <string name="wizard_next">Next</string>
+    <string name="wizard_compose">Compose the list</string>
+    <string name="wizard_source">Start from</string>
+    <string name="wizard_source_template">A template</string>
+    <string name="wizard_source_trip">A past trip</string>
+    <string name="wizard_source_empty">Empty</string>
+
+    <!-- Why is this here -->
+    <string name="why_title">Why is this here?</string>
+    <string name="why_body">%1$s was not in the template. One wizard rule added it.</string>
+    <string name="why_rule">Rule</string>
+    <string name="why_remove">Remove item</string>
+    <string name="why_manual">You added this item yourself, so no rule applies.</string>
+    <string name="why_template">This item came from the template you started with.</string>
+
+    <!-- Rule explanations -->
+    <string name="rule_accommodation_apartment">In an apartment you cook, so the kitchen and cleaning sections come along.</string>
+    <string name="rule_accommodation_hotel">A hotel supplies towels, a hairdryer and shower gel, so those stay home.</string>
+    <string name="rule_nights_gte5">From five nights on, clothing gets rotated, so a maintenance section is added. For shorter trips it is not.</string>
+    <string name="rule_nights_gte14">Past two weeks you wash rather than pack, so underwear and socks switch to a fixed ten with a mid-trip laundry plan.</string>
+    <string name="rule_activity_beach">You picked the beach.</string>
+    <string name="rule_activity_hiking">You picked hiking.</string>
+    <string name="rule_activity_business">You picked business.</string>
+    <string name="rule_activity_driving">You picked driving.</string>
+    <string name="rule_activity_gym">You picked the gym.</string>
+    <string name="rule_activity_formal">You picked a formal dinner.</string>
+    <string name="rule_core">Part of the core list that travels everywhere.</string>
+
+    <!-- Quantity rules -->
+    <string name="quantity_fixed">Fixed · %1$d</string>
+    <string name="quantity_unspecified">Unspecified</string>
+    <string name="quantity_per_nights">%1$d per night</string>
+    <string name="quantity_per_nights_n">1 per %1$d nights</string>
+    <string name="quantity_plus">, +%1$d</string>
+    <string name="quantity_cap">, max %1$d</string>
+
+    <!-- Catalogue -->
+    <string name="catalogue_title">Catalogue</string>
+    <string name="catalogue_subtitle">%1$d items · %2$d tasks</string>
+    <string name="catalogue_sort_most_used">Most used</string>
+    <string name="catalogue_sort_unused">Unused over a year</string>
+    <string name="catalogue_sort_alphabetical">A to Z</string>
+    <string name="catalogue_filter_tasks">Tasks</string>
+    <string name="catalogue_used_times">used %1$d×</string>
+    <string name="catalogue_last_used">last %1$s</string>
+    <string name="catalogue_never_used">never used</string>
+    <string name="catalogue_left_behind">left behind %1$d×</string>
+    <string name="catalogue_empty_title">The catalogue is empty</string>
+    <string name="catalogue_empty_body">This should not happen — the seed runs on first launch. Import a backup, or add the first item by hand.</string>
+    <string name="catalogue_unused_empty_title">Nothing gathering dust</string>
+    <string name="catalogue_unused_empty_body">Everything in the catalogue has been on a trip within the last year.</string>
+    <string name="catalogue_add">New catalogue item</string>
+    <string name="catalogue_field_name">Name</string>
+    <string name="catalogue_field_kind">Kind</string>
+    <string name="catalogue_field_bag">Bag</string>
+    <string name="catalogue_field_quantity">Quantity</string>
+    <string name="catalogue_field_section">Section</string>
+    <string name="catalogue_field_note">Note</string>
+    <string name="catalogue_field_photo">Photo</string>
+    <string name="catalogue_photo_add">Add a photo</string>
+    <string name="catalogue_photo_replace">Replace photo</string>
+    <string name="catalogue_photo_remove">Remove photo</string>
+    <string name="catalogue_kind_item">Item</string>
+    <string name="catalogue_kind_task">Task</string>
+    <string name="catalogue_archived">Archived</string>
+    <string name="catalogue_restore">Restore</string>
+    <string name="catalogue_archive_explained">Archiving keeps it out of new trips. Trips that already reference it stay intact — nothing is ever hard-deleted.</string>
+
+    <!-- Fuzzy match -->
+    <string name="fuzzy_title">Already in the catalogue?</string>
+    <string name="fuzzy_body">These look close to “%1$s”. Adding a near-duplicate is how a catalogue turns into a mess.</string>
+    <string name="fuzzy_use_existing">Use this one</string>
+    <string name="fuzzy_add_anyway">Add as new anyway</string>
+
+    <!-- Travellers -->
+    <string name="travellers_title">Travellers</string>
+    <string name="traveller_shared">Shared</string>
+    <string name="traveller_add">Add traveller</string>
+    <string name="traveller_name">Name</string>
+    <string name="traveller_everyone">Everyone</string>
+    <string name="travellers_empty_title">No travellers</string>
+    <string name="travellers_empty_body">Two entries are seeded on first launch. Add one back to assign items again.</string>
+
+    <!-- Shopping -->
+    <string name="shopping_title">Shopping</string>
+    <string name="shopping_subtitle">%1$d items · %2$d trips</string>
+    <string name="shopping_empty_title">Nothing to buy</string>
+    <string name="shopping_empty_body">Nothing across your active trips is marked as to buy. Long-press an item on a trip to put it here.</string>
+    <string name="shopping_bought_note">bought · back on the packing list</string>
+    <string name="shopping_export">Export the list</string>
+
+    <!-- Return mode -->
+    <string name="return_title">Trip complete</string>
+    <string name="return_summary_returned">Returned</string>
+    <string name="return_left_behind">Left behind</string>
+    <string name="return_left_behind_none">Everything came home.</string>
+    <string name="return_first_time">first time</string>
+    <string name="return_now_total">now %1$d times in total</string>
+    <string name="return_writeback">Both go into the catalogue as a forgetting counter. From the next trip on, they sit at the top of the return section.</string>
+    <string name="return_close_trip">Close the trip</string>
+    <string name="return_empty_title">Nothing to collect</string>
+    <string name="return_empty_body">Nothing on this trip was packed, so there is nothing to bring home yet.</string>
+
+    <!-- PDF export -->
+    <string name="export_title">Export as PDF</string>
+    <string name="export_who">For whom</string>
+    <string name="export_who_one">%1$s + shared</string>
+    <string name="export_which_list">List</string>
+    <string name="export_grouping">Grouping</string>
+    <string name="export_include_to_buy">Include items to buy</string>
+    <string name="export_include_to_buy_note">Adds a separate block at the end</string>
+    <string name="export_summary">%1$d items · %2$d pages</string>
+    <string name="export_interactive_note">The checkboxes are real form fields — they tick in any reader.</string>
+    <string name="export_save">Save</string>
+    <string name="export_send">Send</string>
+    <string name="export_done">PDF exported</string>
+    <string name="export_failed">Could not write the PDF: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_version">Stow %1$s · build %2$d</string>
+    <string name="settings_group_display">Display</string>
+    <string name="settings_group_data">Data</string>
+    <string name="settings_group_about">About</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">System</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_default_grouping">Default grouping</string>
+    <string name="settings_sort_checked">Sort packed to the bottom</string>
+    <string name="settings_sort_checked_note">Only on the “Tidy up” action, never while you tap</string>
+    <string name="settings_export">Export all data</string>
+    <string name="settings_export_note">JSON · the only backup that exists</string>
+    <string name="settings_import">Import</string>
+    <string name="settings_import_note">Adds, never deletes</string>
+    <string name="settings_travellers">Travellers</string>
+    <string name="settings_catalogue">Manage catalogue</string>
+    <string name="settings_source">Source on GitHub</string>
+    <string name="settings_source_note">Opens a browser · no network permission</string>
+    <string name="settings_licences">Licences</string>
+    <string name="settings_licences_note">Apache-2.0</string>
+    <string name="settings_no_browser">No app on this device can open a link.</string>
+
+    <!-- Import / export results -->
+    <string name="import_done">Imported: %1$d added, %2$d updated</string>
+    <string name="import_failed">Import failed: %1$s</string>
+    <string name="import_bad_version">This file was written by a newer version of Stow (schema %1$d).</string>
+    <string name="import_bad_format">This is not a Stow export file.</string>
+    <string name="export_data_done">Data exported</string>
+
+    <!-- Widget and shortcuts -->
+    <string name="widget_label">Stow</string>
+    <string name="widget_description">Progress on the current trip and what is still unpacked.</string>
+    <string name="widget_no_trip">No active trip</string>
+    <string name="widget_nothing_left">All packed</string>
+    <string name="widget_more_items">and %1$d more</string>
+    <string name="shortcut_new_trip_short">New trip</string>
+    <string name="shortcut_new_trip_long">Start a new trip</string>
+    <string name="shortcut_shopping_short">Shopping</string>
+    <string name="shortcut_shopping_long">Open the shopping list</string>
+
+    <!-- Errors and confirmations -->
+    <string name="error_name_required">A name is needed.</string>
+    <string name="error_nights_range">Nights must be between 1 and 365.</string>
+    <string name="error_quantity_positive">Quantity must be at least 1.</string>
+    <string name="deleted_with_undo">Deleted “%1$s”</string>
+    <string name="section_deleted_with_undo">Deleted section “%1$s”</string>
+
+    <!-- Plurals -->
+    <plurals name="items_count">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <plurals name="nights_count">
+        <item quantity="one">%1$d night</item>
+        <item quantity="other">%1$d nights</item>
+    </plurals>
+    <plurals name="trips_count">
+        <item quantity="one">%1$d trip</item>
+        <item quantity="other">%1$d trips</item>
+    </plurals>
+</resources>

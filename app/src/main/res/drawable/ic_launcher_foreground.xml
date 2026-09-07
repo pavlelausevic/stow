@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+    Ikona je sama osnovna kontrola aplikacije: zaobljeni kvadrat sa kvačicom.
+    Kvadrat je predmet, krug je zadatak — ista razlika koju nose sve liste u aplikaciji.
+    Radijus prati skalu (7 dp na 19 dp kutiji ≈ 37 %), pa je ovde 16 na 44.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:pathData="M48,31 L60,31 A17,17 0 0,1 77,48 L77,60 A17,17 0 0,1 60,77 L48,77 A17,17 0 0,1 31,60 L31,48 A17,17 0 0,1 48,31 Z"
+        android:strokeColor="#141719"
+        android:strokeWidth="7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:pathData="M43,55 L51,63 L67,45"
+        android:strokeColor="#141719"
+        android:strokeWidth="7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

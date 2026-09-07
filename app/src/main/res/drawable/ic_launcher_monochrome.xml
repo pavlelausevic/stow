@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+    Monohromni sloj za temiranu ikonu. Isti oblik, boja se ignoriše — sistem je
+    prebojava. Zato su potezi malo deblji: temirana ikona se često crta manja.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:pathData="M48,31 L60,31 A17,17 0 0,1 77,48 L77,60 A17,17 0 0,1 60,77 L48,77 A17,17 0 0,1 31,60 L31,48 A17,17 0 0,1 48,31 Z"
+        android:strokeColor="#000000"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:pathData="M43,55 L51,63 L67,45"
+        android:strokeColor="#000000"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

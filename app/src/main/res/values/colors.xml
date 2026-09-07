@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+    Jedina dva mesta gde boja mora da postoji i van Compose-a: pozadina prozora pre
+    prvog frejma i pozadinski sloj adaptivne ikone. Izvor istine je Boje.kt.
+-->
+<resources>
+    <color name="window_background">#E9EAE4</color>
+    <color name="ic_launcher_background">#E9EAE4</color>
+    <color name="widget_ink">#141719</color>
+    <color name="widget_ink2">#474F53</color>
+    <color name="widget_muted">#7B8580</color>
+    <color name="widget_line">#D3D7CF</color>
+    <color name="widget_accent">#26428F</color>
+</resources>
