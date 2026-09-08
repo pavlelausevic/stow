@@ -267,6 +267,10 @@ class TripRepository(
 
     suspend fun completeSection(sectionId: Long) = tripDao.completeSection(sectionId)
 
+    /** Dodela putnika jednoj stavci. `null` = zajedničko. */
+    suspend fun assignItem(itemId: Long, assigneeId: Long?) =
+        tripDao.assignItem(itemId, assigneeId)
+
     suspend fun assignSection(sectionId: Long, assigneeId: Long?) =
         tripDao.assignSection(sectionId, assigneeId)
 

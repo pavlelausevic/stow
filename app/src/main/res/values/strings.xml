@@ -54,6 +54,13 @@
     <string name="group_by_traveller">By traveller</string>
     <string name="section_not_taken">Not taken · not counted</string>
     <string name="trip_tidy">Tidy up</string>
+    <string name="trip_view_options">View</string>
+    <string name="trip_grouping">Grouping</string>
+    <string name="trip_assign">Assign traveller</string>
+    <string name="trip_reorder">Reorder</string>
+    <string name="trip_reorder_done">Done</string>
+    <string name="trip_reorder_hint">Drag by the handle</string>
+    <string name="trip_reorder_only_sections">Order is kept per section, so reordering needs the section view</string>
     <string name="trip_tidy_explained">Move packed items to the bottom, once</string>
     <string name="trip_uncheck_all">Uncheck everything</string>
     <string name="trip_complete_section">Complete section</string>

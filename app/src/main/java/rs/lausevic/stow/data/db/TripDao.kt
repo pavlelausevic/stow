@@ -157,6 +157,9 @@ interface TripDao {
     @Query("UPDATE trip_item SET isReturned = :returned, updatedAt = :now WHERE id = :id")
     suspend fun setReturned(id: Long, returned: Boolean, now: Long = System.currentTimeMillis())
 
+    @Query("UPDATE trip_item SET assigneeId = :assigneeId, updatedAt = :now WHERE id = :id")
+    suspend fun assignItem(id: Long, assigneeId: Long?, now: Long = System.currentTimeMillis())
+
     @Query("UPDATE trip_item SET assigneeId = :assigneeId, updatedAt = :now WHERE tripSectionId = :sectionId")
     suspend fun assignSection(sectionId: Long, assigneeId: Long?, now: Long = System.currentTimeMillis())
 

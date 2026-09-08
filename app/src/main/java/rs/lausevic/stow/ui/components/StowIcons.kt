@@ -100,6 +100,9 @@ object StowIcons {
 
     val Chevron: ImageVector by lazy { stroked("chevron", "M9,5 L16,12 L9,19") }
 
+    /** Hvataljka za prevlačenje: dve pune crte, isto pero kao ostatak seta. */
+    val Reorder: ImageVector by lazy { stroked("reorder", "M6,9.5 L18,9.5 M6,14.5 L18,14.5") }
+
     private fun stroked(name: String, pathData: String, strokeWidth: Float = 2f): ImageVector =
         ImageVector.Builder(
             name = "stow_$name",

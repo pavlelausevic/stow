@@ -14,6 +14,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import rs.lausevic.stow.data.db.TravellerEntity
+import rs.lausevic.stow.data.model.GroupBy
+import rs.lausevic.stow.ui.components.ButtonStyle
+import rs.lausevic.stow.ui.components.ItemGroup
+import rs.lausevic.stow.ui.components.RowDivider
+import rs.lausevic.stow.ui.components.SegmentedControl
+import rs.lausevic.stow.ui.components.TravellerChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -162,6 +171,157 @@ internal fun WhyIsThisHereSheet(item: TripItemEntity, onDismiss: () -> Unit) {
                 text = stringResource(R.string.action_ok),
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+/**
+ * Pogled na listu: grupisanje i ulaz u preuređivanje.
+ *
+ * Oboje su isti soj radnje — menjaju kako lista izgleda, a ne šta u njoj piše — pa stoje
+ * na jednom mestu, do filtera, a ne kao još dve ikone u zaglavlju.
+ */
+@Composable
+internal fun ViewOptionsSheet(
+    grouping: GroupBy,
+    onGrouping: (GroupBy) -> Unit,
+    onReorder: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val c = StowTheme.state
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(Color(0x85101211))
+            .clickable(onClick = onDismiss),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .clip(StowShapes.sheet)
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 18.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Text(
+                stringResource(R.string.trip_view_options),
+                style = MaterialTheme.typography.headlineSmall,
+            )
+
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                MicroLabel(stringResource(R.string.trip_grouping))
+                SegmentedControl(
+                    options = GroupBy.entries,
+                    selected = grouping,
+                    label = {
+                        when (it) {
+                            GroupBy.SECTION -> stringResource(R.string.group_by_section)
+                            GroupBy.BAG -> stringResource(R.string.group_by_bag)
+                            GroupBy.TRAVELLER -> stringResource(R.string.group_by_traveller)
+                        }
+                    },
+                    onSelect = onGrouping,
+                )
+            }
+
+            // Redni broj stavke je po sekciji. Prevlačenje u pogledu po torbi ili putniku
+            // nema gde da se upiše, pa se ne nudi — umesto da se ponudi pa ne uradi ništa.
+            val canReorder = grouping == GroupBy.SECTION
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                StowButton(
+                    text = stringResource(R.string.trip_reorder),
+                    onClick = onReorder,
+                    enabled = canReorder,
+                    style = ButtonStyle.GHOST,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                if (!canReorder) {
+                    MicroLabel(stringResource(R.string.trip_reorder_only_sections), color = c.muted)
+                }
+            }
+
+            StowButton(
+                text = stringResource(R.string.action_ok),
+                onClick = onDismiss,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+/**
+ * Dodela putnika jednoj stavci. „Zajedničko" je prva stavka, ne izostavljena — ono je
+ * podrazumevano stanje i mora se moći vratiti.
+ */
+@Composable
+internal fun AssignTravellerSheet(
+    travellers: List<TravellerEntity>,
+    selectedId: Long?,
+    onPick: (Long?) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(Color(0x85101211))
+            .clickable(onClick = onDismiss),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .clip(StowShapes.sheet)
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 18.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(
+                stringResource(R.string.trip_assign),
+                style = MaterialTheme.typography.headlineSmall,
+            )
+            ItemGroup {
+                AssignRow(
+                    name = null,
+                    selected = selectedId == null,
+                    onClick = { onPick(null) },
+                )
+                travellers.forEach { traveller ->
+                    RowDivider()
+                    AssignRow(
+                        name = traveller.name,
+                        selected = selectedId == traveller.id,
+                        onClick = { onPick(traveller.id) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AssignRow(name: String?, selected: Boolean, onClick: () -> Unit) {
+    val c = StowTheme.state
+    val label = name ?: stringResource(R.string.traveller_shared)
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(11.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TravellerChip(name)
+        Text(label, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+        if (selected) {
+            Icon(
+                imageVector = StowIcons.Check,
+                contentDescription = null,
+                tint = c.ink,
+                modifier = Modifier.size(18.dp),
             )
         }
     }

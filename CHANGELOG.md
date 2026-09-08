@@ -17,6 +17,9 @@ First version.
 - Three item states — to buy, to pack, packed — with to-buy shown as blocking rather than
   folded into progress, and a shopping view across all active trips.
 - Tasks alongside items, with their own affordance, no bag and no quantity.
+- The trip list groups by section, bag or traveller, items are assigned to a traveller
+  from the row itself, and order is changed by dragging a handle in an explicit reorder
+  mode — never by a stray touch while packing.
 - Return mode on a separate axis from packing, with a left-behind counter written back to
   the catalogue when a trip is closed.
 - Optional photo per catalogue item through the Photo Picker, copied into private storage,
