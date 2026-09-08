@@ -89,6 +89,55 @@ class SeedRepository(
         return true
     }
 
+    /**
+     * Prevodi nazive stavki koje korisnik NIJE dirao na tekuci jezik.
+     *
+     * Nazivi iz seed-a se razresavaju pri upisu, pa bi bez ovoga katalog zasejan na
+     * engleskom zauvek ostao engleski i posle prebacivanja aplikacije na srpski.
+     *
+     * Dira se samo red koji jos nosi `seedKey`. Cim korisnik izmeni stavku, `seedKey` se
+     * brise i naziv postaje njegov — tudji jezik mu vise ne moze prepisati ime.
+     */
+    suspend fun relocalise() {
+        val file = read()
+        val sections = file.sections.associateBy { it.key }
+        val templates = file.templates.associateBy { it.key }
+
+        file.items.forEach { seedItem ->
+            val existing = catalogDao.bySeedKey(seedItem.key) ?: return@forEach
+            val name = seedItem.resolve()
+            val note = seedItem.resolveNote()
+            val section = sections[seedItem.section]?.resolve()
+            if (existing.name == name && existing.note == note && existing.defaultSection == section) {
+                return@forEach
+            }
+            catalogDao.update(
+                existing.copy(
+                    name = name,
+                    normalizedName = TextMatching.normalize(name),
+                    note = note,
+                    defaultSection = section,
+                ),
+            )
+        }
+
+        file.templates.forEach { seedTemplate ->
+            val existing = templateDao.bySeedKey(seedTemplate.key) ?: return@forEach
+            val name = seedTemplate.resolve()
+            if (existing.name != name) {
+                templateDao.update(existing.copy(name = name, description = seedTemplate.resolveDescription()))
+            }
+        }
+
+        templateDao.allSections().forEach { section ->
+            val key = section.seedKey ?: return@forEach
+            val title = sections[key]?.resolve() ?: return@forEach
+            if (section.title != title) templateDao.updateSection(section.copy(title = title))
+        }
+        // Snimci putovanja se NE prevode. Oni su snimci onoga sto je tada pisalo.
+        templates.size
+    }
+
     fun read(): SeedFile =
         assets.open(SEED_PATH).bufferedReader().use { json.decodeFromString(SeedFile.serializer(), it.readText()) }
 

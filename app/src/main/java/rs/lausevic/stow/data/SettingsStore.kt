@@ -17,8 +17,12 @@ import rs.lausevic.stow.ui.theme.ThemeChoice
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("stow_settings")
 
+/** Sistem, srpski (latinica) ili engleski. */
+enum class LanguageChoice(val tag: String?) { SYSTEM(null), SERBIAN("sr-Latn"), ENGLISH("en") }
+
 data class Settings(
     val theme: ThemeChoice = ThemeChoice.SYSTEM,
+    val language: LanguageChoice = LanguageChoice.SYSTEM,
     val defaultGrouping: GroupBy = GroupBy.SECTION,
     /**
      * Namerno `false`. Štikliranje ne sme da pomera red pod prstom — sortiranje na dno
@@ -34,6 +38,8 @@ class SettingsStore(private val context: Context) {
         Settings(
             theme = prefs[KeyTheme]?.let { runCatching { ThemeChoice.valueOf(it) }.getOrNull() }
                 ?: ThemeChoice.SYSTEM,
+            language = prefs[KeyLanguage]?.let { runCatching { LanguageChoice.valueOf(it) }.getOrNull() }
+                ?: LanguageChoice.SYSTEM,
             defaultGrouping = prefs[KeyGrouping]?.let { runCatching { GroupBy.valueOf(it) }.getOrNull() }
                 ?: GroupBy.SECTION,
             sortCheckedToBottom = prefs[KeySortChecked] ?: false,
@@ -47,6 +53,10 @@ class SettingsStore(private val context: Context) {
 
     suspend fun setSeedVersion(version: Int) {
         context.dataStore.edit { it[KeySeedVersion] = version }
+    }
+
+    suspend fun setLanguage(choice: LanguageChoice) {
+        context.dataStore.edit { it[KeyLanguage] = choice.name }
     }
 
     suspend fun setTheme(choice: ThemeChoice) {
@@ -63,6 +73,7 @@ class SettingsStore(private val context: Context) {
 
     private companion object {
         val KeyTheme = stringPreferencesKey("theme")
+        val KeyLanguage = stringPreferencesKey("language")
         val KeyGrouping = stringPreferencesKey("default_grouping")
         val KeySortChecked = booleanPreferencesKey("sort_checked_to_bottom")
         val KeySeedVersion = intPreferencesKey("seed_version")

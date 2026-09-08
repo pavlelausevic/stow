@@ -18,6 +18,7 @@ import rs.lausevic.stow.data.Settings
 import rs.lausevic.stow.ui.components.BottomDestination
 import rs.lausevic.stow.ui.components.StowIcons
 import rs.lausevic.stow.ui.screens.CatalogueScreen
+import rs.lausevic.stow.ui.screens.LicencesScreen
 import rs.lausevic.stow.ui.screens.ReturnSummaryScreen
 import rs.lausevic.stow.ui.screens.SettingsScreen
 import rs.lausevic.stow.ui.screens.ShoppingScreen
@@ -33,6 +34,7 @@ object Routes {
     const val WIZARD = "wizard"
     const val TRIP = "trip"
     const val RETURN_SUMMARY = "return-summary"
+    const val LICENCES = "licences"
 
     fun trip(id: Long) = "$TRIP/$id"
     fun returnSummary(id: Long) = "$RETURN_SUMMARY/$id"
@@ -98,7 +100,11 @@ fun StowNavHost(
                 destinations = destinations,
                 route = route,
                 onSelectTab = { navController.switchTab(it.route) },
+                onOpenLicences = { navController.navigate(Routes.LICENCES) },
             )
+        }
+        composable(Routes.LICENCES) {
+            LicencesScreen(onBack = { navController.popBackStack() })
         }
         composable(Routes.WIZARD) {
             WizardScreen(

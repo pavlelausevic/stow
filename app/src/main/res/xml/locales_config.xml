@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
-    <locale android:name="sr" />
+    <!--
+        sr-Latn, ne goli "sr". Podrazumevano pismo za srpski je CIRILICA, pa telefon
+        podesen na "Srpski (latinica)" (sr-Latn-RS) NE nalazi values-sr i tiho pada na
+        engleski. Zato je i folder values-b+sr+Latn.
+    -->
+    <locale android:name="sr-Latn" />
     <locale android:name="en" />
 </locale-config>

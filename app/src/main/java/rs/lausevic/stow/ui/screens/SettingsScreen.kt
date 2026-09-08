@@ -2,6 +2,7 @@
 package rs.lausevic.stow.ui.screens
 
 import android.content.ActivityNotFoundException
+import android.os.Build
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 import rs.lausevic.stow.AppContainer
 import rs.lausevic.stow.BuildConfig
 import rs.lausevic.stow.R
+import rs.lausevic.stow.data.LanguageChoice
 import rs.lausevic.stow.data.Settings
 import rs.lausevic.stow.data.model.GroupBy
 import rs.lausevic.stow.data.repo.TransferRepository
@@ -64,6 +66,7 @@ fun SettingsScreen(
     destinations: List<BottomDestination>,
     route: String,
     onSelectTab: (BottomDestination) -> Unit,
+    onOpenLicences: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -138,6 +141,30 @@ fun SettingsScreen(
             item { SectionHeader(stringResource(R.string.settings_group_display)) }
             item {
                 ItemGroup {
+                    Column(Modifier.padding(vertical = 10.dp)) {
+                        MicroLabel(stringResource(R.string.settings_language))
+                        Column(Modifier.padding(top = 7.dp)) {
+                            SegmentedControl(
+                                options = LanguageChoice.entries,
+                                selected = settings.language,
+                                label = {
+                                    when (it) {
+                                        LanguageChoice.SYSTEM -> stringResource(R.string.settings_language_system)
+                                        LanguageChoice.SERBIAN -> stringResource(R.string.settings_language_serbian)
+                                        LanguageChoice.ENGLISH -> stringResource(R.string.settings_language_english)
+                                    }
+                                },
+                                onSelect = { scope.launch { container.settings.setLanguage(it) } },
+                            )
+                        }
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                            MicroLabel(
+                                stringResource(R.string.settings_language_note_old),
+                                Modifier.padding(top = 6.dp),
+                            )
+                        }
+                    }
+                    RowDivider()
                     SettingRow(stringResource(R.string.settings_theme)) {
                         Pill(
                             when (settings.theme) {
@@ -235,6 +262,7 @@ fun SettingsScreen(
                     SettingRow(
                         title = stringResource(R.string.settings_licences),
                         note = stringResource(R.string.settings_licences_note),
+                        onClick = onOpenLicences,
                     ) { Icon(StowIcons.Chevron, null, tint = StowTheme.state.ink2, modifier = Modifier.size(20.dp)) }
                 }
             }

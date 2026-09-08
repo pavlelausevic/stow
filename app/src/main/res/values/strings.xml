@@ -295,4 +295,13 @@
         <item quantity="one">%1$d trip</item>
         <item quantity="other">%1$d trips</item>
     </plurals>
+    <string name="licences_subtitle">What is third-party, and under which licence</string>
+    <string name="licences_intro">Stow has few dependencies on purpose, so this list is short enough to read. It is written by hand rather than generated: a generator would print thirty transitive AndroidX artefacts, and the question this screen answers is what is third-party, not what is on the classpath.</string>
+    <string name="licences_app">This app</string>
+    <string name="licences_libraries">Libraries</string>
+    <string name="licences_fonts">Typefaces</string>
+    <string name="licences_fonts_note">The full OFL texts ship inside the app, next to the font files.</string>
+    <string name="settings_language_serbian">Srpski</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_note_old">On Android 12 and older the language follows the phone.</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -177,7 +178,14 @@ data class BottomDestination(
     val icon: ImageVector,
 )
 
-/** Ekran sa zaglavljem, telom i (opciono) donjom trakom. Jedan Scaffold po ekranu. */
+/**
+ * Ekran sa zaglavljem, telom i (opciono) donjom trakom. Jedan Scaffold po ekranu.
+ *
+ * Aplikacija je edge-to-edge, pa prozor ide ISPOD statusne trake i sistemske navigacije.
+ * Insete zato mora da nosi neko — i to tacno jednom. Ovde ih nosi zaglavlje (gore) i,
+ * kad donje trake nema, samo telo (dole). Kad donja traka postoji, ona nosi svoj inset
+ * sama; racunanje na oba mesta je isti onaj bug od dva ugnezdena Scaffold-a, samo obrnut.
+ */
 @Composable
 fun StowScreen(
     modifier: Modifier = Modifier,
@@ -190,8 +198,20 @@ fun StowScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
-        topBar()
-        Box(Modifier.weight(1f)) { content() }
+        Box(Modifier.windowInsetsPadding(WindowInsets.statusBars)) { topBar() }
+        Box(
+            Modifier
+                .weight(1f)
+                .then(
+                    if (bottomBar == null) {
+                        Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+                    } else {
+                        Modifier
+                    },
+                ),
+        ) {
+            content()
+        }
         bottomBar?.invoke()
     }
 }

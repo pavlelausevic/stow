@@ -31,7 +31,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations += setOf("en", "sr")
+        resourceConfigurations += setOf("en", "b+sr+Latn")
     }
 
     signingConfigs {

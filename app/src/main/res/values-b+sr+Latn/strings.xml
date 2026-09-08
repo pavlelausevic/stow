@@ -296,4 +296,13 @@
         <item quantity="few">%1$d putovanja</item>
         <item quantity="other">%1$d putovanja</item>
     </plurals>
+    <string name="licences_subtitle">Šta je tuđe i pod kojom licencom</string>
+    <string name="licences_intro">Stow namerno ima malo zavisnosti, pa je i ovaj spisak dovoljno kratak da se pročita. Pisan je ručno, a ne generisan: generator bi ispisao trideset tranzitivnih AndroidX artefakata, a pitanje na koje ovaj ekran odgovara je šta je tuđe, ne šta je sve u classpath-u.</string>
+    <string name="licences_app">Ova aplikacija</string>
+    <string name="licences_libraries">Biblioteke</string>
+    <string name="licences_fonts">Pisma</string>
+    <string name="licences_fonts_note">Puni tekstovi OFL licence su u samoj aplikaciji, uz fontove.</string>
+    <string name="settings_language_serbian">Srpski</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_note_old">Na Androidu 12 i starijem jezik prati telefon.</string>
 </resources>
