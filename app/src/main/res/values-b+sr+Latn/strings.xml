@@ -217,6 +217,10 @@
     <string name="export_who_one">%1$s + zajedničko</string>
     <string name="export_which_list">Lista</string>
     <string name="export_grouping">Grupisanje</string>
+    <string name="export_page_format">Strana</string>
+    <string name="export_page_phone">Telefon</string>
+    <string name="export_page_a4">A4</string>
+    <string name="export_page_format_note">Strana za telefon staje na ekran; A4 je za štampu</string>
     <string name="export_include_to_buy">Uključi stavke za nabavku</string>
     <string name="export_include_to_buy_note">Dodaje zaseban blok na kraj</string>
     <string name="export_summary">%1$d stavki · %2$d strane</string>

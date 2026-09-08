@@ -51,8 +51,8 @@ class PackingListPdfTest {
         pageLabel = { page, total -> "Strana $page / $total" },
     )
 
-    private fun render(doc: PackingListPdf.Document): String =
-        String(PackingListPdf(regular, semibold).render(doc), Charsets.ISO_8859_1)
+    private fun render(doc: PackingListPdf.Document, layout: PageLayout = PageLayout.A4): String =
+        String(PackingListPdf(regular, semibold, layout).render(doc), Charsets.ISO_8859_1)
 
     @Test
     fun `emits a well formed pdf`() {
@@ -185,5 +185,40 @@ class PackingListPdfTest {
         )
         val pdf = render(doc)
         assertEquals(1, Regex("/Subtype /Widget").findAll(pdf).count())
+    }
+
+    @Test
+    fun `the phone layout is a narrow page with a checkbox a finger can hit`() {
+        val a4 = render(document())
+        val phone = render(document(), PageLayout.PHONE)
+
+        assertTrue("A4 mora ostati A4", a4.contains("/MediaBox [0 0 595.28 841.89]"))
+        assertTrue("strana za telefon mora biti uska", phone.contains("/MediaBox [0 0 300.0 540.0]"))
+
+        assertEquals("kutija na A4", 12.0, boxSide(a4), 0.001)
+        assertEquals("kutija na telefonu", 15.0, boxSide(phone), 0.001)
+
+        // Ako se /BBox izgleda ne poveca zajedno sa /Rect, kvacica ostaje nacrtana za
+        // kutiju od 12 pt i sedi u donjem levom uglu vece kutije.
+        assertTrue("/BBox mora da prati kutiju", a4.contains("/BBox [0 0 12.0 12.0]"))
+        assertTrue("/BBox mora da prati kutiju", phone.contains("/BBox [0 0 15.0 15.0]"))
+    }
+
+    @Test
+    fun `a phone page holds fewer rows, so the same list runs longer`() {
+        val doc = document(rowCount = 10, sectionCount = 2)
+        val a4Pages = pages(render(doc))
+        val phonePages = pages(render(doc, PageLayout.PHONE))
+
+        assertEquals("kontrola: ova lista staje na jednu A4 stranu", 1, a4Pages)
+        assertTrue("na uskoj strani mora da se prelomi, dobijeno $phonePages", phonePages > a4Pages)
+    }
+
+    private fun pages(pdf: String) = Regex("/Type /Page[^s]").findAll(pdf).count()
+
+    /** Stranica kutije iz prvog `/Rect` — vidžet je kvadrat, pa je dovoljna širina. */
+    private fun boxSide(pdf: String): Double {
+        val rect = Regex("""/Rect \[([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)\]""").find(pdf)!!
+        return rect.groupValues[3].toDouble() - rect.groupValues[1].toDouble()
     }
 }

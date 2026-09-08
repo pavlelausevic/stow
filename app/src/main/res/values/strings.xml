@@ -221,6 +221,10 @@
     <string name="export_who_one">%1$s + shared</string>
     <string name="export_which_list">List</string>
     <string name="export_grouping">Grouping</string>
+    <string name="export_page_format">Page</string>
+    <string name="export_page_phone">Phone</string>
+    <string name="export_page_a4">A4</string>
+    <string name="export_page_format_note">A phone page fits the screen; A4 is for printing</string>
     <string name="export_include_to_buy">Include items to buy</string>
     <string name="export_include_to_buy_note">Adds a separate block at the end</string>
     <string name="export_summary">%1$d items · %2$d pages</string>

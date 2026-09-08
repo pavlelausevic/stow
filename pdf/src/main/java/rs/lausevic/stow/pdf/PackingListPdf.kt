@@ -14,6 +14,7 @@ package rs.lausevic.stow.pdf
 class PackingListPdf(
     private val regular: TrueTypeFont,
     private val semibold: TrueTypeFont,
+    private val layout: PageLayout = PageLayout.A4,
 ) {
 
     enum class BoxShape { SQUARE, CIRCLE, DOTTED }
@@ -80,7 +81,7 @@ class PackingListPdf(
                 pageId,
                 """
                 << /Type /Page /Parent $pagesId 0 R
-                   /MediaBox [0 0 $PAGE_WIDTH $PAGE_HEIGHT]
+                   /MediaBox [0 0 ${layout.pageWidth} ${layout.pageHeight}]
                    /Resources << /Font << /F1 $bodyRef 0 R /F2 $boldRef 0 R >>
                                  /ProcSet [/PDF /Text] >>
                    /Contents $contentId 0 R
@@ -132,30 +133,30 @@ class PackingListPdf(
         val pages = mutableListOf<Page>()
         var sections = mutableListOf<PlacedSection>()
         var rows = mutableListOf<PlacedRow>()
-        var y = PAGE_HEIGHT - MARGIN - HEADER_HEIGHT
+        var y = layout.pageHeight - layout.margin - layout.headerHeight
 
         fun newPage() {
             pages += Page(sections, rows)
             sections = mutableListOf()
             rows = mutableListOf()
-            y = PAGE_HEIGHT - MARGIN - CONTINUATION_TOP
+            y = layout.pageHeight - layout.margin - layout.continuationTop
         }
 
         document.sections.forEach { section ->
             if (section.rows.isEmpty()) return@forEach
             // Zaglavlje sekcije sa jednim redom ispod na dnu strane je siroce: ili oba
             // idu na sledecu stranu, ili nijedno.
-            if (y - SECTION_HEIGHT - ROW_HEIGHT < MARGIN + FOOTER_HEIGHT) newPage()
+            if (y - layout.sectionHeight - layout.rowHeight < layout.margin + layout.footerHeight) newPage()
 
             sections += PlacedSection(section.title, y)
-            y -= SECTION_HEIGHT
+            y -= layout.sectionHeight
 
             section.rows.forEach { row ->
-                if (y - ROW_HEIGHT < MARGIN + FOOTER_HEIGHT) newPage()
+                if (y - layout.rowHeight < layout.margin + layout.footerHeight) newPage()
                 rows += PlacedRow(row, y)
-                y -= if (row.meta != null) ROW_HEIGHT_WITH_META else ROW_HEIGHT
+                y -= layout.rowHeight(row.meta != null)
             }
-            y -= SECTION_GAP
+            y -= layout.sectionGap
         }
 
         pages += Page(sections, rows)
@@ -172,47 +173,49 @@ class PackingListPdf(
         body: PdfFont,
         bold: PdfFont,
     ): String = buildString {
-        val right = PAGE_WIDTH - MARGIN
+        val right = layout.pageWidth - layout.margin
 
         if (index == 0) {
-            val titleTop = PAGE_HEIGHT - MARGIN - 24
-            text(bold, document.title, MARGIN, titleTop, 22.0)
-            var line = titleTop - 18
+            val titleTop = layout.pageHeight - layout.margin - (layout.titleSize + 2)
+            text(bold, document.title, layout.margin, titleTop, layout.titleSize)
+            var line = titleTop - layout.titleSize * 0.82
             document.subtitleLines.forEach {
-                text(body, it, MARGIN, line, 9.0, GREY)
+                text(body, it, layout.margin, line, 9.0, GREY)
                 line -= 12
             }
 
-            val stampWidth = 96.0
-            val stampHeight = 12.0 + document.stamp.size * 11.0
+            val stampWidth = layout.stampWidth
+            val stampLead = layout.stampSize * 1.375
+            val stampHeight = 12.0 + document.stamp.size * stampLead
             val stampX = right - stampWidth
-            val stampY = PAGE_HEIGHT - MARGIN - stampHeight
+            val stampY = layout.pageHeight - layout.margin - stampHeight
             roundedRect(stampX, stampY, stampWidth, stampHeight, 8.0, ACCENT, 1.2)
             document.stamp.forEachIndexed { i, stampLine ->
-                val w = body.width(stampLine, 8.0)
-                text(body, stampLine, stampX + (stampWidth - w) / 2, stampY + stampHeight - 14 - i * 11, 8.0, ACCENT)
+                val w = body.width(stampLine, layout.stampSize)
+                val lineY = stampY + stampHeight - (layout.stampSize + 6) - i * stampLead
+                text(body, stampLine, stampX + (stampWidth - w) / 2, lineY, layout.stampSize, ACCENT)
             }
 
-            val ruleY = PAGE_HEIGHT - MARGIN - HEADER_HEIGHT + 14
-            rule(MARGIN, ruleY, right, 2.0, INK)
+            val ruleY = layout.pageHeight - layout.margin - layout.headerHeight + 14
+            rule(layout.margin, ruleY, right, 2.0, INK)
         } else {
-            text(body, document.title, MARGIN, PAGE_HEIGHT - MARGIN - 10, 9.0, GREY)
-            rule(MARGIN, PAGE_HEIGHT - MARGIN - CONTINUATION_TOP + 12, right, 1.0, LINE)
+            text(body, document.title, layout.margin, layout.pageHeight - layout.margin - 10, 9.0, GREY)
+            rule(layout.margin, layout.pageHeight - layout.margin - layout.continuationTop + 12, right, 1.0, LINE)
         }
 
         page.sections.forEach { section ->
             val label = section.title.uppercase()
-            text(bold, label, MARGIN, section.y, 8.0, INK, charSpacing = 1.4)
-            val labelEnd = MARGIN + bold.width(label, 8.0) + 1.4 * label.length + 8
+            text(bold, label, layout.margin, section.y, 8.0, INK, charSpacing = 1.4)
+            val labelEnd = layout.margin + bold.width(label, 8.0) + 1.4 * label.length + 8
             rule(labelEnd, section.y + 3, right, 1.0, LINE)
         }
 
         page.rows.forEach { placed ->
             val row = placed.row
             val boxY = placed.y - 1
-            drawBox(row.shape, MARGIN, boxY)
+            drawBox(row.shape, layout.margin, boxY)
 
-            val textX = MARGIN + BOX_SIZE + 10
+            val textX = layout.margin + layout.boxSize + 10
             val quantity = row.quantity
             val quantityWidth = quantity?.let { body.width(it, 10.0) } ?: 0.0
             val available = right - textX - quantityWidth - (if (quantity != null) 10.0 else 0.0)
@@ -224,12 +227,12 @@ class PackingListPdf(
             if (quantity != null) {
                 text(body, quantity, right - quantityWidth, placed.y, 10.0, INK)
             }
-            rule(MARGIN, placed.y - (if (row.meta != null) 15.0 else 7.0), right, 0.5, LINE)
+            rule(layout.margin, placed.y - (if (row.meta != null) 15.0 else 7.0), right, 0.5, LINE)
         }
 
-        val footerY = MARGIN + 10
-        rule(MARGIN, footerY + 12, right, 1.0, LINE)
-        text(body, document.footerLeft, MARGIN, footerY, 7.5, GREY, charSpacing = 0.7)
+        val footerY = layout.margin + 10
+        rule(layout.margin, footerY + 12, right, 1.0, LINE)
+        text(body, document.footerLeft, layout.margin, footerY, 7.5, GREY, charSpacing = 0.7)
         val label = document.pageLabel(index + 1, total)
         text(body, label, right - body.width(label, 7.5) - 0.7 * label.length, footerY, 7.5, GREY, charSpacing = 0.7)
     }
@@ -289,11 +292,11 @@ class PackingListPdf(
      */
     private fun StringBuilder.drawBox(shape: BoxShape, x: Double, y: Double) {
         when (shape) {
-            BoxShape.SQUARE -> roundedRect(x, y, BOX_SIZE, BOX_SIZE, 3.5, INK, 1.1)
-            BoxShape.CIRCLE -> roundedRect(x, y, BOX_SIZE, BOX_SIZE, BOX_SIZE / 2, INK, 1.1)
+            BoxShape.SQUARE -> roundedRect(x, y, layout.boxSize, layout.boxSize, 3.5, INK, 1.1)
+            BoxShape.CIRCLE -> roundedRect(x, y, layout.boxSize, layout.boxSize, layout.boxSize / 2, INK, 1.1)
             BoxShape.DOTTED -> {
                 append("$ALERT RG 1.1 w [0.1 3] 0 d 1 J\n")
-                roundedRect(x, y, BOX_SIZE, BOX_SIZE, 3.5, ALERT, 1.1)
+                roundedRect(x, y, layout.boxSize, layout.boxSize, 3.5, ALERT, 1.1)
                 append("[] 0 d\n")
             }
         }
@@ -306,16 +309,19 @@ class PackingListPdf(
     private fun writeAppearances(writer: PdfWriter): Appearances {
         val off = writer.reserve()
         val on = writer.reserve()
-        val dict = "/Type /XObject /Subtype /Form /BBox [0 0 $BOX_SIZE $BOX_SIZE] " +
+        val dict = "/Type /XObject /Subtype /Form /BBox [0 0 ${layout.boxSize} ${layout.boxSize}] " +
             "/Resources << /ProcSet [/PDF] >>"
 
         // Prazno stanje ne crta nista: okvir je vec u sadrzaju strane, pa bi drugi
         // okvir preko njega bio deblja linija na svakoj neoznacenoj stavci.
         writer.writeStream(off, dict, " ".toByteArray(Charsets.ISO_8859_1))
+        // Kvacica je crtana za kutiju od 12 pt, pa se skalira sa njom — inace bi na
+        // vecoj kutiji stajala u donjem levom uglu.
+        val k = layout.boxSize / 12.0
 
         val tick = buildString {
-            append("$INK RG 1.6 w 1 J 1 j\n")
-            append("2.6 6.2 m 5.0 3.6 l 9.6 9.4 l S\n")
+            append("$INK RG ${1.6 * k} w 1 J 1 j\n")
+            append("${2.6 * k} ${6.2 * k} m ${5.0 * k} ${3.6 * k} l ${9.6 * k} ${9.4 * k} l S\n")
         }
         writer.writeStream(on, dict, tick.toByteArray(Charsets.ISO_8859_1))
         return Appearances(off, on)
@@ -328,7 +334,7 @@ class PackingListPdf(
         placed: PlacedRow,
         appearances: Appearances,
     ) {
-        val x = MARGIN
+        val x = layout.margin
         val y = placed.y - 1
         writer.writeObject(
             id,
@@ -337,7 +343,7 @@ class PackingListPdf(
                /T ${PdfWriter.literal(placed.row.fieldName)}
                /TU ${PdfWriter.literal(placed.row.title)}
                /Ff 0 /F 4
-               /Rect [$x $y ${x + BOX_SIZE} ${y + BOX_SIZE}]
+               /Rect [$x $y ${x + layout.boxSize} ${y + layout.boxSize}]
                /AS /Off /V /Off /DV /Off
                /MK << /BC [] /BG [] >>
                /DA (/F1 0 Tf 0 g)
@@ -367,18 +373,6 @@ class PackingListPdf(
     }
 
     private companion object {
-        const val PAGE_WIDTH = 595.28
-        const val PAGE_HEIGHT = 841.89
-        const val MARGIN = 48.0
-        const val HEADER_HEIGHT = 92.0
-        const val CONTINUATION_TOP = 34.0
-        const val FOOTER_HEIGHT = 30.0
-        const val SECTION_HEIGHT = 22.0
-        const val SECTION_GAP = 8.0
-        const val ROW_HEIGHT = 19.0
-        const val ROW_HEIGHT_WITH_META = 27.0
-        const val BOX_SIZE = 12.0
-
         /** Kappa: koliko kontrolna tačka Bezijea mora da izađe da bi luk bio krug. */
         const val BEZIER_CIRCLE = 0.5523
 

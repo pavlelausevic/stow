@@ -29,7 +29,9 @@ wrong in ways you can neither see nor fix.
 
 **A PDF writer written from scratch.** Trips export as PDFs whose checkboxes are real
 AcroForm fields — send one to whoever you travel with and they tick it in any reader. The
-writer is a separate pure-Kotlin module with no third-party PDF dependency.
+writer is a separate pure-Kotlin module with no third-party PDF dependency. The page comes
+in two sizes: a narrow one that fits a phone screen at the reader's default zoom, so the
+list reads without panning, and A4 for printing.
 
 ## Design
 

@@ -73,6 +73,7 @@ fun ExportSheet(
     var mode by remember { mutableStateOf(returning) }
     var grouping by remember { mutableStateOf(PdfExporter.Grouping.SECTION) }
     var includeToBuy by remember { mutableStateOf(true) }
+    var pageFormat by remember { mutableStateOf(PdfExporter.PageFormat.PHONE) }
     var working by remember { mutableStateOf(false) }
 
     // Razreseno pri kompoziciji — vidi istu napomenu u SettingsScreen.
@@ -99,7 +100,7 @@ fun ExportSheet(
                         items = container.trips.items(trip.id),
                         options = options,
                     )
-                    exporter.write(document, exporter.fileName(trip, options))
+                    exporter.write(document, exporter.fileName(trip, options), pageFormat)
                 }
             }.onSuccess { file ->
                 if (share) {
@@ -189,6 +190,25 @@ fun ExportSheet(
                     },
                     onSelect = { grouping = it },
                 )
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                MicroLabel(stringResource(R.string.export_page_format))
+                SegmentedControl(
+                    options = PdfExporter.PageFormat.entries,
+                    selected = pageFormat,
+                    label = {
+                        stringResource(
+                            if (it == PdfExporter.PageFormat.PHONE) {
+                                R.string.export_page_phone
+                            } else {
+                                R.string.export_page_a4
+                            },
+                        )
+                    },
+                    onSelect = { pageFormat = it },
+                )
+                MicroLabel(stringResource(R.string.export_page_format_note))
             }
 
             ItemGroup {

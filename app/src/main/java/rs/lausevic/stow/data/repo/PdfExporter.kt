@@ -13,6 +13,7 @@ import rs.lausevic.stow.data.model.RuleType
 import rs.lausevic.stow.data.model.SectionPhase
 import rs.lausevic.stow.domain.ReturnList
 import rs.lausevic.stow.pdf.PackingListPdf
+import rs.lausevic.stow.pdf.PageLayout
 import rs.lausevic.stow.pdf.TrueTypeFont
 import java.io.File
 import java.time.LocalDate
@@ -29,6 +30,15 @@ import java.util.Locale
 class PdfExporter(private val context: Context) {
 
     enum class Grouping { SECTION, BAG }
+
+    /**
+     * Format strane. Telefon je uska strana koju citac uklopi po sirini, pa lista stane
+     * na ekran bez pomeranja levo-desno; A4 je list za stampu.
+     */
+    enum class PageFormat(val layout: PageLayout) {
+        PHONE(PageLayout.PHONE),
+        A4(PageLayout.A4),
+    }
 
     data class Options(
         /** `null` = svi putnici; inače taj putnik plus sve zajedničko. */
@@ -99,12 +109,17 @@ class PdfExporter(private val context: Context) {
         )
     }
 
-    fun write(document: PackingListPdf.Document, fileName: String): File {
+    fun write(
+        document: PackingListPdf.Document,
+        fileName: String,
+        format: PageFormat = PageFormat.PHONE,
+    ): File {
         val exports = File(context.cacheDir, "exports").apply { mkdirs() }
         // Isto ime se prepisuje: cache nije arhiva, a dvadeset kopija iste liste
         // je smece koje korisnik nikad nece obrisati.
         val file = File(exports, fileName)
-        file.writeBytes(PackingListPdf(loadFont(REGULAR), loadFont(SEMIBOLD)).render(document))
+        val pdf = PackingListPdf(loadFont(REGULAR), loadFont(SEMIBOLD), format.layout)
+        file.writeBytes(pdf.render(document))
         return file
     }
 

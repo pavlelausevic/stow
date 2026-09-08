@@ -21,7 +21,8 @@ First version.
   the catalogue when a trip is closed.
 - Optional photo per catalogue item through the Photo Picker, copied into private storage,
   downscaled, and stripped of EXIF.
-- PDF export whose checkboxes are real AcroForm fields.
+- PDF export whose checkboxes are real AcroForm fields, on a narrow page sized for a phone
+  screen or on A4 for printing.
 - Full JSON export and import; additive, never deleting, matched by UUID.
 - Home-screen widget and a launcher shortcut.
 - Serbian (Latin) and English, with an in-app language override.
