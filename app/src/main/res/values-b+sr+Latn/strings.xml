@@ -48,8 +48,13 @@
     <string name="group_by_section">Po sekciji</string>
     <string name="group_by_bag">Po torbi</string>
     <string name="group_by_traveller">Po putniku</string>
+    <string name="section_default">Ostalo</string>
     <string name="section_not_taken">Nije poneto · ne broji se</string>
     <string name="trip_tidy">Sredi</string>
+    <string name="trip_add_often">Često nosiš</string>
+    <string name="trip_add_section">Sekcija</string>
+    <string name="trip_add_kind">Vrsta</string>
+    <string name="trip_add_done">Dodato</string>
     <string name="trip_view_options">Prikaz</string>
     <string name="trip_grouping">Grupisanje</string>
     <string name="trip_assign">Dodeli putnika</string>
@@ -70,6 +75,7 @@
     <string name="trip_empty_body">Prazno putovanje je sasvim dobra polazna tačka. Dodaj sekciju ili povuci stavke iz kataloga.</string>
     <string name="trip_filter_empty_title">Nema pogodaka</string>
     <string name="trip_filter_empty_body">Nijedna stavka na ovom putovanju trenutno nije u tom stanju.</string>
+    <string name="trip_search_empty_body">Ništa na ovom putovanju se tako ne zove. Dijakritika nije bitna.</string>
 
     <!-- Stanja -->
     <string name="state_to_pack">Za pakovanje</string>

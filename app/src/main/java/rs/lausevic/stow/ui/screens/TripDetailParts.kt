@@ -14,6 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
+import rs.lausevic.stow.ui.components.FieldBox
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import rs.lausevic.stow.data.db.TravellerEntity
@@ -324,5 +332,36 @@ private fun AssignRow(name: String?, selected: Boolean, onClick: () -> Unit) {
                 modifier = Modifier.size(18.dp),
             )
         }
+    }
+}
+
+/**
+ * Polje za pretragu unutar putovanja.
+ *
+ * Otvara se na ikonu i odmah traži fokus — polje koje se pojavi pa čeka još jedan dodir
+ * je dva dodira za jednu nameru. Filtriranje radi ekran; ovo je samo unos.
+ */
+@Composable
+internal fun TripSearchField(value: String, onValueChange: (String) -> Unit) {
+    val c = StowTheme.state
+    val focus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { focus.requestFocus() }
+
+    FieldBox(
+        label = stringResource(R.string.trip_search_hint),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            textStyle = LocalTextStyle.current.merge(
+                MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.onSurface),
+            ),
+            singleLine = true,
+            cursorBrush = SolidColor(c.accent),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focus),
+        )
     }
 }

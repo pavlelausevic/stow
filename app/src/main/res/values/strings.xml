@@ -52,8 +52,13 @@
     <string name="group_by_section">By section</string>
     <string name="group_by_bag">By bag</string>
     <string name="group_by_traveller">By traveller</string>
+    <string name="section_default">Everything else</string>
     <string name="section_not_taken">Not taken · not counted</string>
     <string name="trip_tidy">Tidy up</string>
+    <string name="trip_add_often">Often carried</string>
+    <string name="trip_add_section">Section</string>
+    <string name="trip_add_kind">Kind</string>
+    <string name="trip_add_done">Added</string>
     <string name="trip_view_options">View</string>
     <string name="trip_grouping">Grouping</string>
     <string name="trip_assign">Assign traveller</string>
@@ -74,6 +79,7 @@
     <string name="trip_empty_body">An empty trip is a fine starting point. Add a section, or pull items in from the catalogue.</string>
     <string name="trip_filter_empty_title">Nothing matches</string>
     <string name="trip_filter_empty_body">No item on this trip is in that state right now.</string>
+    <string name="trip_search_empty_body">Nothing on this trip is called that. Diacritics do not matter.</string>
 
     <!-- Item states -->
     <string name="state_to_pack">To pack</string>

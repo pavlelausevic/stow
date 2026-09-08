@@ -20,6 +20,10 @@ First version.
 - The trip list groups by section, bag or traveller, items are assigned to a traveller
   from the row itself, and order is changed by dragging a handle in an explicit reorder
   mode — never by a stray touch while packing.
+- Items are added to a trip after it exists, from a sheet that stays open across a burst
+  of them, offers what you most often carry and is not already on this trip, and matches
+  against the catalogue as you type so a near-duplicate does not sneak in.
+- Search inside a trip, diacritic-insensitive, so "punjac" finds "punjač".
 - Return mode on a separate axis from packing, with a left-behind counter written back to
   the catalogue when a trip is closed.
 - Optional photo per catalogue item through the Photo Picker, copied into private storage,

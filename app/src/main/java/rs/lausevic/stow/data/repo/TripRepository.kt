@@ -3,6 +3,7 @@ package rs.lausevic.stow.data.repo
 
 import kotlinx.coroutines.flow.Flow
 import rs.lausevic.stow.data.db.CatalogDao
+import rs.lausevic.stow.data.db.CatalogItemEntity
 import rs.lausevic.stow.data.db.ShoppingRow
 import rs.lausevic.stow.data.db.TemplateDao
 import rs.lausevic.stow.data.db.TemplateEntity
@@ -235,6 +236,48 @@ class TripRepository(
         )
     }
 
+
+    /**
+     * Dodavanje stavke na već napravljeno putovanje.
+     *
+     * Ide na **dno** svoje sekcije, nikad na vrh: lista koja se pomeri kad joj nešto
+     * dodaš je isto pomeranje pod prstom protiv kojeg cela aplikacija stoji.
+     *
+     * Ako stavka dolazi iz kataloga, sa sobom nosi torbu, napomenu i pravilo količine —
+     * pravilo se razrešava **sada**, prema dužini ovog putovanja, i tu se zamrzne, isto
+     * kao pri pravljenju putovanja. Slobodan unos nema pravilo i nema katalošku vezu.
+     */
+    suspend fun addItem(
+        sectionId: Long,
+        catalogItem: CatalogItemEntity?,
+        title: String,
+        kind: ItemKind,
+        nights: Int?,
+    ) {
+        val order = (tripDao.itemsInSection(sectionId).maxOfOrNull { it.sortOrder } ?: -1) + 1
+        val rule = catalogItem?.let {
+            QuantityRuleColumns(it.ruleType, it.rulePer, it.rulePlus, it.ruleCap)
+        } ?: QuantityRuleColumns.from(QuantityRule.Unspecified)
+
+        tripDao.insertItem(
+            buildItem(
+                sectionId = sectionId,
+                catalogItemId = catalogItem?.id,
+                title = catalogItem?.name ?: title.trim(),
+                note = catalogItem?.note,
+                kind = catalogItem?.kind ?: kind,
+                rule = rule,
+                nights = nights,
+                bag = catalogItem?.defaultBag ?: Bag.UNASSIGNED,
+                ruleId = null,
+                sortOrder = order,
+            ),
+        )
+        catalogItem?.let { catalogDao.recordUse(it.id) }
+    }
+
+    /** Predlozi za ovo putovanje: najkorišćenije iz kataloga što ovde još nije. */
+    fun observeSuggestions(tripId: Long) = catalogDao.observeSuggestions(tripId)
     // --- izmene stanja ---
 
     /**

@@ -46,6 +46,7 @@ import rs.lausevic.stow.data.model.PackStatus
 import rs.lausevic.stow.data.model.SectionPhase
 import rs.lausevic.stow.data.model.TripMode
 import rs.lausevic.stow.domain.ReturnList
+import rs.lausevic.stow.domain.TextMatching
 import rs.lausevic.stow.ui.components.ButtonStyle
 import rs.lausevic.stow.ui.components.EmptyState
 import rs.lausevic.stow.ui.components.FilterRow
@@ -85,6 +86,9 @@ fun TripDetailScreen(
     var explaining by remember { mutableStateOf<TripItemEntity?>(null) }
     var exporting by remember { mutableStateOf(false) }
     var viewOptions by remember { mutableStateOf(false) }
+    var searching by remember { mutableStateOf(false) }
+    var adding by remember { mutableStateOf(false) }
+    var query by remember { mutableStateOf("") }
     var assigning by remember { mutableStateOf<TripItemEntity?>(null) }
     var reordering by remember { mutableStateOf(false) }
     // Pogled se seje iz podešavanja, pa se dalje menja za ovo putovanje — podešavanje je
@@ -94,14 +98,27 @@ fun TripDetailScreen(
 
     val current = trip ?: return
     val returning = current.mode == TripMode.RETURNING
+    // Pravilo količine se razrešava prema dužini putovanja — isto kao pri pravljenju.
+    val nights = current.startDate?.let { start ->
+        current.endDate?.let { end -> (end - start).toInt().takeIf { n -> n > 0 } }
+    }
 
-    val visible = remember(items, sections, filter, returning) {
+    val visible = remember(items, sections, filter, returning, query) {
         val bySection = sections.associateBy { it.id }
+        // Pretraga ide preko normalizovanog naziva, pa „punjac" nađe „punjač" — ista
+        // normalizacija koju koristi i poklapanje sličnih u katalogu.
+        val needle = TextMatching.normalize(query)
+        fun matches(item: TripItemEntity) =
+            needle.isEmpty() || TextMatching.normalize(item.title).contains(needle)
+
         if (returning) {
-            ReturnList.build(items) { bySection[it.tripSectionId]?.phase ?: SectionPhase.PACKING }
+            val built = ReturnList.build(items) {
+                bySection[it.tripSectionId]?.phase ?: SectionPhase.PACKING
+            }
+            ReturnList.Result(built.included.filter(::matches), built.notTaken.filter(::matches))
         } else {
             items.filter { item ->
-                when (filter) {
+                matches(item) && when (filter) {
                     ItemFilter.ALL -> true
                     ItemFilter.TO_BUY -> item.packStatus == PackStatus.TO_BUY
                     ItemFilter.TO_PACK -> item.packStatus == PackStatus.TO_PACK
@@ -196,27 +213,47 @@ fun TripDetailScreen(
                             )
                         }
                         IconAction(
+                            icon = StowIcons.Search,
+                            description = stringResource(R.string.action_search),
+                            onClick = {
+                                searching = !searching
+                                // Zatvaranje polja briše upit: skriveni filter koji i
+                                // dalje krati listu je najgori mogući ishod.
+                                if (!searching) query = ""
+                            },
+                            bordered = false,
+                        )
+                        IconAction(
                             icon = StowIcons.More,
                             description = stringResource(R.string.trip_view_options),
                             onClick = { viewOptions = true },
                             bordered = false,
                         )
                     }
+                    if (searching) {
+                        Box(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
+                            TripSearchField(query) { query = it }
+                        }
+                    }
                 }
             }
 
             if (visible.included.isEmpty() && visible.notTaken.isEmpty()) {
+                // Prazna pretraga nije prazno putovanje: „nema ništa na listi" bi bilo
+                // netačno u trenutku kad lista ima trideset stavki a upit nijednu.
+                val filtered = query.isNotBlank() || filter != ItemFilter.ALL
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     EmptyState(
                         title = stringResource(
-                            if (returning) R.string.return_empty_title
-                            else if (filter == ItemFilter.ALL) R.string.trip_empty_title
-                            else R.string.trip_filter_empty_title,
+                            if (returning && !filtered) R.string.return_empty_title
+                            else if (filtered) R.string.trip_filter_empty_title
+                            else R.string.trip_empty_title,
                         ),
                         body = stringResource(
-                            if (returning) R.string.return_empty_body
-                            else if (filter == ItemFilter.ALL) R.string.trip_empty_body
-                            else R.string.trip_filter_empty_body,
+                            if (returning && !filtered) R.string.return_empty_body
+                            else if (query.isNotBlank()) R.string.trip_search_empty_body
+                            else if (filtered) R.string.trip_filter_empty_body
+                            else R.string.trip_empty_body,
                         ),
                         mark = if (returning) "↩" else "▤",
                     )
@@ -264,6 +301,14 @@ fun TripDetailScreen(
                         modifier = Modifier.weight(1f),
                     )
                 }
+                if (!returning && !reordering) {
+                    StowButton(
+                        text = stringResource(R.string.trip_add_item),
+                        onClick = { adding = true },
+                        style = ButtonStyle.INK,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
                 if (returning) {
                     StowButton(
                         text = stringResource(R.string.trip_finish),
@@ -280,6 +325,17 @@ fun TripDetailScreen(
         WhyIsThisHereSheet(item = item, onDismiss = { explaining = null })
     }
 
+
+    if (adding) {
+        TripAddSheet(
+            container = container,
+            tripId = tripId,
+            sections = sections,
+            nights = nights,
+            onAdded = { message = it },
+            onDismiss = { adding = false },
+        )
+    }
     if (viewOptions) {
         ViewOptionsSheet(
             grouping = grouping,
