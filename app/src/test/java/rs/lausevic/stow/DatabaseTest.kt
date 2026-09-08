@@ -270,6 +270,63 @@ class DatabaseTest {
         assertEquals(0, db.catalogDao().byId(id)!!.timesLeftBehind)
     }
 
+
+    @Test
+    fun `an item added later lands at the bottom and brings its catalogue defaults`() =
+        runBlocking {
+            val ids = List(3) { catalogItem("Stavka $it") }
+            val tripId = tripFromTemplate(template(*ids.toLongArray()), nights = 4)
+            val sectionId = trips.sections(tripId).single().id
+
+            val charger = catalogItem(
+                name = "Punjač",
+                bag = Bag.CARRY_ON,
+                ruleType = RuleType.PER_NIGHTS,
+                per = 1,
+                plus = 1,
+            )
+            val before = db.catalogDao().byId(charger)!!.timesUsed
+
+            trips.addItem(
+                sectionId = sectionId,
+                catalogItem = db.catalogDao().byId(charger),
+                title = "ignorisano",
+                kind = ItemKind.ITEM,
+                nights = 4,
+            )
+
+            val rows = db.tripDao().itemsInSection(sectionId)
+            val added = rows.last()
+            assertEquals("nova stavka ide na dno", "Punjač", added.title)
+            assertEquals("redni broj se nastavlja", 3, added.sortOrder)
+            assertEquals("torba dolazi iz kataloga", Bag.CARRY_ON, added.bag)
+            assertEquals("naziv iz kataloga pobeđuje slobodan unos", charger, added.catalogItemId)
+            // Pravilo se razrešava sada, prema dužini putovanja, pa se zamrzne: 4 + 1.
+            assertEquals("količina je razrešena i zamrznuta", 5, added.quantityCount)
+            assertEquals("upotreba se broji", before + 1, db.catalogDao().byId(charger)!!.timesUsed)
+        }
+
+    @Test
+    fun `a free text item carries no catalogue link and no rule`() = runBlocking {
+        val ids = List(2) { catalogItem("Stavka $it") }
+        val tripId = tripFromTemplate(template(*ids.toLongArray()), nights = 7)
+        val sectionId = trips.sections(tripId).single().id
+
+        trips.addItem(
+            sectionId = sectionId,
+            catalogItem = null,
+            title = "  Rezervni ključ  ",
+            kind = ItemKind.TASK,
+            nights = 7,
+        )
+
+        val added = db.tripDao().itemsInSection(sectionId).last()
+        assertEquals("Rezervni ključ", added.title)
+        assertNull("slobodan unos nema katalošku vezu", added.catalogItemId)
+        assertEquals(ItemKind.TASK, added.kind)
+        assertNull("zadatak nema količinu", added.quantityCount)
+        assertEquals("zadatak nema torbu", Bag.UNASSIGNED, added.bag)
+    }
     // --- redosled ---
 
     @Test
