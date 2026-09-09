@@ -37,10 +37,17 @@ object StowIcons {
     }
 
     /** Police sa stvarima — katalog. */
+    /**
+     * Spisak sa tačkama — katalog.
+     *
+     * Bio je klizači, isto kao podešavanja: dve kartice u donjoj navigaciji su izgledale
+     * identično na 24 dp. Katalog je spisak stvari, ne regulator.
+     */
     val Catalogue: ImageVector by lazy {
         stroked(
             "catalogue",
-            "M4,6 L20,6 M4,12 L20,12 M4,18 L20,18 M8,4 L8,8 M15,10 L15,14 M10,16 L10,20",
+            "M5,7 L5,7.01 M10,7 L20,7 M5,12 L5,12.01 M10,12 L20,12 " +
+                "M5,17 L5,17.01 M10,17 L20,17",
         )
     }
 
