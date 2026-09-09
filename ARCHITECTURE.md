@@ -23,6 +23,12 @@ catalogue name, not a foreign key to it. `catalogItemId` survives only for prove
 statistics, and is nullable with `ON DELETE SET NULL`, so archiving a catalogue item can
 never take a trip row down with it.
 
+A snapshot is a snapshot of *content*, not of language. `TripSection.seedKey` and
+`TripItem.seedKey` carry the seed key across the deep copy, and switching the app language
+rewrites exactly those rows — a hundred and forty seeded items are the same object under
+two names and were never the user's words. A row he typed has no key and is never
+rewritten; there is no translator here, only two lists.
+
 The reason for the split is that a packing list is a historical record as much as a plan.
 If you rename "Punjač za telefon" to "GaN punjač" in March, the trip you took in January
 should still say what you actually packed.
@@ -105,6 +111,17 @@ retrofitting one later would mean a migration through every table.
 Import matches by UUID first, then by natural key. When a row matches by natural key but
 the UUIDs differ, the local row **adopts the UUID from the backup** and the two are the
 same row from then on. All of it runs in one transaction, and **import never deletes**.
+
+## Migrations
+
+The schema is at version 2. Version 1 shipped everything except the seed key on trip rows,
+so the migration adds two nullable columns and backfills what it can: a trip item finds its
+key through `catalogItemId`, since the catalogue row already carries it. Trip sections could
+not be done in SQL — the migration tried matching their titles against the template, but the
+template had already been relocalised, so nothing matched. That backfill lives in
+`SeedRepository.relocalise` instead, where the seed file is in hand and a title can be
+recognised in either language. Both schema files are committed and the schema test asserts
+the current one against the database the code creates.
 
 Since `allowBackup=false` and `dataExtractionRules` excludes everything, this JSON export
 is the only backup that exists.

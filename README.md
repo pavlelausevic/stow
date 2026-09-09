@@ -20,7 +20,10 @@ WorkManager, which declares `ACCESS_NETWORK_STATE`. The widget is plain `RemoteV
 **A catalogue, not a list of strings.** Three layers, and the distinction between them is
 the architecture: the **catalogue** is what you own, **templates** are blueprints that
 reference it live, and **trips are snapshots** — deep-copied at creation, so editing the
-catalogue never mutates a trip that already exists. See [ARCHITECTURE.md](ARCHITECTURE.md).
+catalogue never mutates a trip that already exists. The one thing a snapshot does follow
+is the language: a row the seed put there keeps its key and is shown in Serbian or
+English accordingly, while anything you typed yourself is never touched. See
+[ARCHITECTURE.md](ARCHITECTURE.md).
 
 **Generation you can inspect and correct.** A short questionnaire composes a list from
 rule-based fragments. Every generated item records which rule put it there, and a "why is
@@ -82,7 +85,7 @@ widget is plain `RemoteViews`); no analytics, crash reporting, Firebase or Play 
 
 ## Tests
 
-`./gradlew check` runs 72 unit tests and the manifest check. Three of them are worth
+`./gradlew check` runs 77 unit tests and the manifest check. Three of them are worth
 pointing at:
 
 The PDF tests parse the **emitted bytes**, not the writer's internals — they walk the xref
@@ -95,9 +98,10 @@ seed. A rule pointing at a missing key silently does nothing, so "beach" would s
 a swimsuit and nobody would find out until the airport.
 
 The schema test compares the committed schema against the database the code actually
-creates. There are no migrations yet — the schema is at version 1 — but a schema file that
-has drifted from the code is a migration written against a document that lies, and that is
-cheaper to prevent than to debug.
+creates. The schema is at version 2 — a trip row gained the seed key that lets a
+pre-seeded name follow the app language — and both versions are committed, because a
+schema file that has drifted from the code is a migration written against a document that
+lies, and that is cheaper to prevent than to debug.
 
 ## Licence
 
