@@ -186,6 +186,11 @@ data class TripSectionEntity(
     val uuid: String = newUuid(),
     val tripId: Long,
     val title: String,
+    /**
+     * Ključ u seed JSON-u, prepisan sa šablonske sekcije. Dok postoji, naslov prati jezik
+     * aplikacije; sekcija koju je korisnik napravio ga nema i ostaje kako ju je nazvao.
+     */
+    val seedKey: String? = null,
     val phase: SectionPhase = SectionPhase.PACKING,
     val sortOrder: Int = 0,
     val updatedAt: Long = System.currentTimeMillis(),
@@ -258,6 +263,15 @@ data class TripItemEntity(
     /** ID pravila čarobnjaka, npr. `nights.gte5.rotation`. Nikad rečenica — vidi napomenu gore. */
     val ruleId: String? = null,
     val ruleArgs: String? = null,
+    /**
+     * Ključ u seed JSON-u, prepisan sa kataloške stavke pri pravljenju putovanja.
+     *
+     * Dok postoji, naziv prati jezik aplikacije — pre-setovana stavka je ista stvar na
+     * oba jezika, pa nema razloga da putovanje zauvek ostane na jeziku na kom je
+     * napravljeno. Stavka koju je korisnik sam ukucao ga nema i **nikad se ne prevodi**;
+     * automatskog prevodioca nema i neće ga biti, postoje samo dva spiska.
+     */
+    val seedKey: String? = null,
     val sortOrder: Int = 0,
     val updatedAt: Long = System.currentTimeMillis(),
 )

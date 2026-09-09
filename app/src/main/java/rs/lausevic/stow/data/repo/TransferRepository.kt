@@ -102,6 +102,7 @@ class TransferRepository(
                     uuid = section.uuid,
                     tripUuid = tripUuid[section.tripId].orEmpty(),
                     title = section.title,
+                    seedKey = section.seedKey,
                     phase = section.phase.name,
                     sortOrder = section.sortOrder,
                     updatedAt = section.updatedAt,
@@ -126,6 +127,7 @@ class TransferRepository(
                     isReturned = item.isReturned,
                     ruleId = item.ruleId,
                     ruleArgs = item.ruleArgs,
+                    seedKey = item.seedKey,
                     sortOrder = item.sortOrder,
                     updatedAt = item.updatedAt,
                 )

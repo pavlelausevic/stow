@@ -9,6 +9,7 @@ import rs.lausevic.stow.data.SettingsStore
 import rs.lausevic.stow.data.db.CatalogDao
 import rs.lausevic.stow.data.db.CatalogItemEntity
 import rs.lausevic.stow.data.db.TemplateDao
+import rs.lausevic.stow.data.db.TripDao
 import rs.lausevic.stow.data.db.TemplateEntity
 import rs.lausevic.stow.data.db.TemplateEntryEntity
 import rs.lausevic.stow.data.db.TemplateSectionEntity
@@ -76,6 +77,7 @@ class SeedRepository(
     private val catalogDao: CatalogDao,
     private val travellerDao: TravellerDao,
     private val templateDao: TemplateDao,
+    private val tripDao: TripDao,
     private val settings: SettingsStore,
 ) {
 
@@ -97,6 +99,10 @@ class SeedRepository(
      *
      * Dira se samo red koji jos nosi `seedKey`. Cim korisnik izmeni stavku, `seedKey` se
      * brise i naziv postaje njegov — tudji jezik mu vise ne moze prepisati ime.
+     *
+     * Od verzije 2 seme isto vazi i za **putovanja**: pre-setovana stavka je ista stvar
+     * na oba jezika, pa nema razloga da lista zauvek ostane na jeziku na kom je
+     * napravljena. Ono sto je korisnik sam dodao nema kljuc i ne dira se nikad.
      */
     suspend fun relocalise() {
         val file = read()
@@ -134,7 +140,39 @@ class SeedRepository(
             val title = sections[key]?.resolve() ?: return@forEach
             if (section.title != title) templateDao.updateSection(section.copy(title = title))
         }
-        // Snimci putovanja se NE prevode. Oni su snimci onoga sto je tada pisalo.
+
+        // Putovanja napravljena pre verzije 2 nemaju `seedKey` na sekcijama: migracija ga
+        // je tražila poklapanjem naslova sa šablonom, a šablon je do tada već bio
+        // preveden, pa poklapanja nije ni bilo. Ovde se ključ traži po naslovu na **oba**
+        // jezika, jednom, i posle toga sekcija ima svoj ključ zauvek.
+        val sectionKeyByTitle = buildMap {
+            file.sections.forEach { section ->
+                put(section.sr, section.key)
+                put(section.en, section.key)
+            }
+        }
+        tripDao.allSections().forEach { section ->
+            if (section.seedKey != null) return@forEach
+            val key = sectionKeyByTitle[section.title] ?: return@forEach
+            tripDao.updateSection(section.copy(seedKey = key))
+        }
+
+        // Putovanja se prevode samo tamo gde je naziv i dalje seed-ov. Stavka koju je
+        // korisnik sam dodao nema ključ i ostaje kako ju je nazvao — automatskog
+        // prevodioca nema, postoje samo dva spiska.
+        val itemsByKey = file.items.associateBy { it.key }
+        tripDao.allItems().forEach { item ->
+            val seed = itemsByKey[item.seedKey ?: return@forEach] ?: return@forEach
+            val name = seed.resolve()
+            val note = seed.resolveNote()
+            if (item.title == name && item.note == note) return@forEach
+            tripDao.updateItem(item.copy(title = name, note = note))
+        }
+
+        tripDao.allSections().forEach { section ->
+            val title = sections[section.seedKey ?: return@forEach]?.resolve() ?: return@forEach
+            if (section.title != title) tripDao.updateSection(section.copy(title = title))
+        }
         templates.size
     }
 

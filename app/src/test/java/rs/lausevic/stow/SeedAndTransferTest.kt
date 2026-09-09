@@ -19,6 +19,7 @@ import rs.lausevic.stow.data.SettingsStore
 import rs.lausevic.stow.data.db.StowDatabase
 import rs.lausevic.stow.data.model.Accommodation
 import rs.lausevic.stow.data.model.PackStatus
+import rs.lausevic.stow.data.model.ItemKind
 import rs.lausevic.stow.data.model.TripActivity
 import rs.lausevic.stow.data.repo.SeedRepository
 import rs.lausevic.stow.data.repo.TransferRepository
@@ -26,6 +27,7 @@ import rs.lausevic.stow.data.repo.TripComposer
 import rs.lausevic.stow.data.repo.TripRepository
 import rs.lausevic.stow.domain.WizardRules
 import java.time.LocalDate
+import java.util.Locale
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
@@ -49,6 +51,7 @@ class SeedAndTransferTest {
             catalogDao = db.catalogDao(),
             travellerDao = db.travellerDao(),
             templateDao = db.templateDao(),
+            tripDao = db.tripDao(),
             settings = SettingsStore(context),
         )
         transfer = TransferRepository(
@@ -141,6 +144,58 @@ class SeedAndTransferTest {
             assertTrue("pasoš jeste", entries.any { it.catalogSeedKey == "passport" })
         }
 
+
+    @Test
+    fun `a trip follows the language, except for what the user typed himself`() = runBlocking {
+        val previous = Locale.getDefault()
+        try {
+            Locale.setDefault(Locale.forLanguageTag("sr"))
+            applySeed()
+
+            val start = LocalDate.of(2026, 9, 12).toEpochDay()
+            val tripId = composer.compose(
+                TripComposer.Request(
+                    name = "Split",
+                    destination = "Split",
+                    startDate = start,
+                    endDate = start + 7,
+                    accommodation = Accommodation.APARTMENT,
+                    activities = emptySet(),
+                ),
+            )
+            val sectionId = trips.sections(tripId).first().id
+            trips.addItem(
+                sectionId = sectionId,
+                catalogItem = null,
+                title = "Rezervni ključ",
+                kind = ItemKind.ITEM,
+                nights = 7,
+            )
+
+            suspend fun seeded() = trips.items(tripId).first { it.seedKey == "passport" }
+            assertEquals("Pasoš / lična karta", seeded().title)
+
+            Locale.setDefault(Locale.ENGLISH)
+            seed.relocalise()
+
+            assertEquals(
+                "pre-setovana stavka prati jezik aplikacije",
+                "Passport or ID card",
+                seeded().title,
+            )
+            assertTrue(
+                "sekcija prati jezik zajedno sa stavkama",
+                trips.sections(tripId).any { it.title == "Documents and money" },
+            )
+            assertEquals(
+                "ono što je korisnik ukucao se ne prevodi — prevodioca nema, postoje dva spiska",
+                "Rezervni ključ",
+                trips.items(tripId).first { it.seedKey == null }.title,
+            )
+        } finally {
+            Locale.setDefault(previous)
+        }
+    }
     // --- carobnjak nad seed-om ---
 
     @Test
@@ -272,7 +327,7 @@ class SeedAndTransferTest {
             .allowMainThreadQueries().build()
         val freshSeed = SeedRepository(
             context.assets, fresh.catalogDao(), fresh.travellerDao(), fresh.templateDao(),
-            SettingsStore(context),
+            fresh.tripDao(), SettingsStore(context),
         )
         val freshTransfer = TransferRepository(
             fresh.catalogDao(), fresh.travellerDao(), fresh.templateDao(), fresh.tripDao(), fresh,

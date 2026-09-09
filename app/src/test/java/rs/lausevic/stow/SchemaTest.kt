@@ -32,7 +32,7 @@ import java.io.File
 @Config(sdk = [34])
 class SchemaTest {
 
-    private val schemaFile = File("schemas/${StowDatabase::class.java.canonicalName}/1.json")
+    private val schemaFile = File("schemas/${StowDatabase::class.java.canonicalName}/2.json")
 
     @Test
     fun `the exported schema is committed`() {
@@ -46,7 +46,7 @@ class SchemaTest {
     @Test
     fun `the committed schema matches what the code creates`() {
         val committed = JSONObject(schemaFile.readText()).getJSONObject("database")
-        assertEquals(1, committed.getInt("version"))
+        assertEquals(2, committed.getInt("version"))
 
         val context = ApplicationProvider.getApplicationContext<Context>()
         val db = Room.inMemoryDatabaseBuilder(context, StowDatabase::class.java)

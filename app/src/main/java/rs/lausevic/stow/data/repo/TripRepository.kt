@@ -85,6 +85,7 @@ class TripRepository(
                     TripSectionEntity(
                         tripId = tripId,
                         title = row.sectionTitle,
+                        seedKey = row.sectionSeedKey,
                         phase = runCatching { SectionPhase.valueOf(row.sectionPhase) }
                             .getOrDefault(SectionPhase.PACKING),
                         sortOrder = sectionOrder++,
@@ -119,6 +120,7 @@ class TripRepository(
                         .getOrDefault(Bag.UNASSIGNED),
                     ruleId = null,
                     sortOrder = itemOrder++,
+                    seedKey = row.catalogSeedKey,
                 ),
             )
             catalogDao.recordUse(row.catalogItemId)
@@ -153,6 +155,7 @@ class TripRepository(
                 TripSectionEntity(
                     tripId = tripId,
                     title = section.title,
+                    seedKey = section.seedKey,
                     phase = section.phase,
                     sortOrder = section.sortOrder,
                 ),
@@ -173,6 +176,7 @@ class TripRepository(
                         ruleArgs = item.ruleArgs,
                         sortOrder = item.sortOrder,
                         assigneeId = item.assigneeId,
+                        seedKey = item.seedKey,
                     ),
                 )
                 item.catalogItemId?.let { catalogDao.recordUse(it) }
@@ -210,6 +214,7 @@ class TripRepository(
         ruleArgs: String? = null,
         sortOrder: Int,
         assigneeId: Long? = null,
+        seedKey: String? = null,
     ): TripItemEntity {
         // Zadatak nema torbu ni količinu — nije predmet.
         val effectiveRule = if (kind == ItemKind.TASK) {
@@ -233,6 +238,7 @@ class TripRepository(
             ruleArgs = ruleArgs,
             sortOrder = sortOrder,
             assigneeId = assigneeId,
+            seedKey = seedKey,
         )
     }
 
@@ -271,6 +277,9 @@ class TripRepository(
                 bag = catalogItem?.defaultBag ?: Bag.UNASSIGNED,
                 ruleId = null,
                 sortOrder = order,
+                // Iz kataloga dolazi i ključ: pre-setovana stavka je pre-setovana i kad
+                // je dodata ručno. Slobodan unos ga nema i ostaje kako je ukucan.
+                seedKey = catalogItem?.seedKey,
             ),
         )
         catalogItem?.let { catalogDao.recordUse(it.id) }

@@ -70,6 +70,7 @@ class TripComposer(
                 TripSectionEntity(
                     tripId = tripId,
                     title = if (SeedRepository.isSerbian()) section.sr else section.en,
+                    seedKey = section.key,
                     phase = runCatching { SectionPhase.valueOf(section.phase) }
                         .getOrDefault(SectionPhase.PACKING),
                     sortOrder = sectionOrder++,
@@ -106,6 +107,7 @@ class TripComposer(
                     ruleId = ruleId,
                     ruleArgs = nights?.let { """{"nights":$it}""" },
                     sortOrder = tripDao.nextItemOrder(sectionId),
+                    seedKey = catalogItem.seedKey,
                 ),
             )
             catalogDao.recordUse(catalogItem.id)

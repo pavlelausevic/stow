@@ -35,6 +35,9 @@ First version.
 - Full JSON export and import; additive, never deleting, matched by UUID.
 - Home-screen widget and a launcher shortcut.
 - Serbian (Latin) and English, with an in-app language override.
+- A trip follows the app language for everything the seed put there, in both directions,
+  and never touches an item you typed yourself. There is no translator — there are two
+  lists, and an item either came from one of them or it is yours.
 
 ### Deliberately not built
 - Weather, destination databases, accounts, cloud sync, real-time collaboration.

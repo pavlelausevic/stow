@@ -94,6 +94,7 @@ interface TemplateDao {
     @Query(
         """
         SELECT s.id AS sectionId, s.title AS sectionTitle, s.phase AS sectionPhase,
+               s.seedKey AS sectionSeedKey,
                s.sortOrder AS sectionOrder,
                e.id AS entryId, e.sortOrder AS entryOrder, e.note AS entryNote,
                e.bagOverride AS bagOverride, e.ruleTypeOverride AS ruleTypeOverride,
@@ -118,6 +119,7 @@ data class ResolvedTemplateEntry(
     val sectionId: Long,
     val sectionTitle: String,
     val sectionPhase: String,
+    val sectionSeedKey: String?,
     val sectionOrder: Int,
     val entryId: Long,
     val entryOrder: Int,

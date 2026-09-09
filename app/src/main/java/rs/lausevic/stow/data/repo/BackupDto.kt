@@ -113,6 +113,7 @@ data class TripSectionDto(
     val uuid: String,
     val tripUuid: String,
     val title: String,
+    val seedKey: String? = null,
     val phase: String,
     val sortOrder: Int = 0,
     val updatedAt: Long,
@@ -137,6 +138,7 @@ data class TripItemDto(
     val isReturned: Boolean = false,
     val ruleId: String? = null,
     val ruleArgs: String? = null,
+    val seedKey: String? = null,
     val sortOrder: Int = 0,
     val updatedAt: Long,
 )
@@ -263,6 +265,7 @@ fun TripSectionDto.toEntity(tripId: Long) = TripSectionEntity(
     uuid = uuid,
     tripId = tripId,
     title = title,
+    seedKey = seedKey,
     phase = enumOr(phase, SectionPhase.PACKING),
     sortOrder = sortOrder,
     updatedAt = updatedAt,
@@ -286,6 +289,7 @@ fun TripItemDto.toEntity(sectionId: Long, catalogId: Long?, assigneeId: Long?) =
     isReturned = isReturned,
     ruleId = ruleId,
     ruleArgs = ruleArgs,
+    seedKey = seedKey,
     sortOrder = sortOrder,
     updatedAt = updatedAt,
 )

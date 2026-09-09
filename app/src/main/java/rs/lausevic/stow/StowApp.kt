@@ -38,6 +38,7 @@ class AppContainer(context: Context) {
             catalogDao = database.catalogDao(),
             travellerDao = database.travellerDao(),
             templateDao = database.templateDao(),
+            tripDao = database.tripDao(),
             settings = settings,
         )
     }
