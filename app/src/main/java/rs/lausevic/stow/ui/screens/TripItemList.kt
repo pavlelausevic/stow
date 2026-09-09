@@ -14,14 +14,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -47,6 +50,7 @@ import rs.lausevic.stow.ui.components.SectionHeader
 import rs.lausevic.stow.ui.components.StateBox
 import rs.lausevic.stow.ui.components.StowIcons
 import rs.lausevic.stow.ui.components.TravellerChip
+import rs.lausevic.stow.ui.theme.StowShapes
 import rs.lausevic.stow.ui.theme.StowTheme
 
 /**
@@ -84,7 +88,13 @@ internal fun TripItemList(
     // povratna lista je snimak onoga što je poneto, ne mesto za preraspodelu.
     val canAssign = travellers.size > 1 && !returning && !reordering
 
+    // Promena grupisanja menja i naslove i redosled, pa je zatečena pozicija skrola
+    // besmislena: ostaneš nasred nečega što više nije isto. Nazad na vrh.
+    val listState = rememberLazyListState()
+    LaunchedEffect(grouping) { listState.scrollToItem(0) }
+
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
@@ -107,7 +117,7 @@ internal fun TripItemList(
                     if (reordering && sectionId != null) {
                         ReorderableColumn(
                             items = group.items,
-                            key = { it.id },
+                            keyOf = { it.id },
                             onCommit = { ordered -> onReorder(sectionId, ordered.map { it.id }) },
                         ) { item, index, handle ->
                             TripItemRow(
@@ -283,8 +293,24 @@ private fun TripItemRow(
                 if (item.kind == ItemKind.ITEM) bagLabel(item)?.let(::add)
                 quantityLabel(item)?.let(::add)
             }
+            // „Zašto je ovo ovde?" je nekad bila pilula ispod svakog generisanog reda i
+            // trošila je celu liniju na svakoj stavci. Objašnjenje sada visi o samom
+            // opisu — tu i pripada, jer opis i jeste ono što je pravilo upisalo.
             if (meta.isNotEmpty()) {
-                MicroLabel(meta.joinToString(" · "), Modifier.padding(top = 2.dp))
+                MicroLabel(
+                    meta.joinToString(" · "),
+                    Modifier
+                        .then(
+                            if (item.ruleId != null) {
+                                Modifier
+                                    .clip(StowShapes.pill)
+                                    .clickable(onClick = onExplain)
+                            } else {
+                                Modifier
+                            },
+                        )
+                        .padding(top = 2.dp, bottom = 2.dp),
+                )
             }
             if (item.note != null) {
                 Text(
@@ -294,23 +320,16 @@ private fun TripItemRow(
                     modifier = Modifier.padding(top = 3.dp),
                 )
             }
-            Row(
-                Modifier.padding(top = 5.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-            ) {
-                if (item.packStatus == PackStatus.TO_BUY && !returning) {
+            if (item.packStatus == PackStatus.TO_BUY && !returning) {
+                Row(Modifier.padding(top = 5.dp)) {
                     Pill(stringResource(R.string.state_to_buy), tone = PillTone.ALERT)
-                }
-                if (item.ruleId != null) {
-                    Box(Modifier.clickable(onClick = onExplain)) {
-                        Pill(stringResource(R.string.why_title), tone = PillTone.ACCENT)
-                    }
                 }
             }
         }
         if (dragHandle == null && (canAssign || travellerName != null)) {
             Box(
                 Modifier
+                    .clip(StowShapes.pill)
                     .then(
                         if (canAssign) {
                             Modifier

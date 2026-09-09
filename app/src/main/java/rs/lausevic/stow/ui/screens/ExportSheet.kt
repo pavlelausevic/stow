@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -80,6 +83,36 @@ fun ExportSheet(
     val doneText = stringResource(R.string.export_done)
     val failedText = stringResource(R.string.export_failed, "")
 
+    // „Sačuvaj" je do sada pisao u privatni keš i tu stao: poruka je govorila da je
+    // izvezeno, a korisnik nije dobio nijedan fajl. Isporuka ide kroz SAF, kako §4 i
+    // traži — bez ijedne dozvole, jer korisnik sam bira mesto.
+    var pending by remember { mutableStateOf<File?>(null) }
+    val saveTo = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/pdf"),
+    ) { uri ->
+        val file = pending
+        pending = null
+        if (uri == null || file == null) {
+            working = false
+        } else {
+            scope.launch {
+                runCatching {
+                    withContext(Dispatchers.IO) {
+                        context.contentResolver.openOutputStream(uri)?.use { out ->
+                            file.inputStream().use { it.copyTo(out) }
+                        } ?: error(uri.toString())
+                    }
+                }.onSuccess {
+                    onMessage(doneText)
+                    onDismiss()
+                }.onFailure {
+                    onMessage(failedText + " " + it.message.orEmpty())
+                    working = false
+                }
+            }
+        }
+    }
+
     fun export(share: Boolean) {
         if (working) return
         working = true
@@ -119,9 +152,13 @@ fun ExportSheet(
                             null,
                         ),
                     )
+                    onMessage(doneText)
+                    onDismiss()
+                } else {
+                    // Predloženo ime je isto ono pod kojim je fajl napravljen.
+                    pending = file
+                    saveTo.launch(file.name)
                 }
-                onMessage(doneText)
-                onDismiss()
             }.onFailure {
                 onMessage(failedText + " " + it.message.orEmpty())
                 working = false

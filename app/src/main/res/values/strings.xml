@@ -56,6 +56,7 @@
     <string name="section_not_taken">Not taken · not counted</string>
     <string name="trip_tidy">Tidy up</string>
     <string name="trip_add_often">Often carried</string>
+    <string name="trip_add_from_catalogue">From the catalogue</string>
     <string name="trip_add_section">Section</string>
     <string name="trip_add_kind">Kind</string>
     <string name="trip_add_done">Added</string>
@@ -65,7 +66,7 @@
     <string name="trip_reorder">Reorder</string>
     <string name="trip_reorder_done">Done</string>
     <string name="trip_reorder_hint">Drag by the handle</string>
-    <string name="trip_reorder_only_sections">Order is kept per section, so reordering needs the section view</string>
+    <string name="trip_reorder_only_sections">Reordering needs the section view</string>
     <string name="trip_tidy_explained">Move packed items to the bottom, once</string>
     <string name="trip_uncheck_all">Uncheck everything</string>
     <string name="trip_complete_section">Complete section</string>

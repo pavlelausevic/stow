@@ -164,7 +164,10 @@ fun ItemGroup(
             .clip(StowShapes.group)
             .background(MaterialTheme.colorScheme.surface)
             .border(1.dp, c.line, StowShapes.group)
-            .padding(horizontal = 13.dp),
+            .padding(horizontal = 13.dp)
+            // Ploča je zaobljena, pa i pritisak na red mora biti. Bez ovog isečka
+            // highlight prvog i poslednjeg reda ima oštre uglove preko zaobljenja.
+            .clip(StowShapes.group),
     ) {
         content()
     }

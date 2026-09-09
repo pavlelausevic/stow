@@ -174,7 +174,14 @@ class PdfExporter(private val context: Context) {
         val end = trip.endDate?.let { LocalDate.ofEpochDay(it) }
         if (start != null && end != null) {
             val nights = (end.toEpochDay() - start.toEpochDay()).toInt()
-            add("${start.format(dayMonthYear)} – ${end.format(dayMonthYear)} · $nights")
+            // Broj noći bez reči je bio samo cifra na kraju reda: „… · 7". Množina ide
+            // kroz `plurals`, pa srpski dobije „noć / noći" kako treba.
+            val nightsLabel = context.resources.getQuantityString(
+                R.plurals.nights_count,
+                nights,
+                nights,
+            )
+            add("${start.format(dayMonthYear)} – ${end.format(dayMonthYear)} · $nightsLabel")
         } else if (start != null) {
             add(start.format(dayMonthYear))
         }

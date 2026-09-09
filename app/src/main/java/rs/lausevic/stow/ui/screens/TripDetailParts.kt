@@ -185,16 +185,15 @@ internal fun WhyIsThisHereSheet(item: TripItemEntity, onDismiss: () -> Unit) {
 }
 
 /**
- * Pogled na listu: grupisanje i ulaz u preuređivanje.
+ * Pogled na listu: kako se grupiše.
  *
- * Oboje su isti soj radnje — menjaju kako lista izgleda, a ne šta u njoj piše — pa stoje
- * na jednom mestu, do filtera, a ne kao još dve ikone u zaglavlju.
+ * Stoji do filtera, a ne kao još jedna ikona u zaglavlju — i filter i grupisanje menjaju
+ * kako lista izgleda, a ne šta u njoj piše.
  */
 @Composable
 internal fun ViewOptionsSheet(
     grouping: GroupBy,
     onGrouping: (GroupBy) -> Unit,
-    onReorder: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val c = StowTheme.state
@@ -234,23 +233,12 @@ internal fun ViewOptionsSheet(
                     onSelect = onGrouping,
                 )
             }
-
-            // Redni broj stavke je po sekciji. Prevlačenje u pogledu po torbi ili putniku
-            // nema gde da se upiše, pa se ne nudi — umesto da se ponudi pa ne uradi ništa.
-            val canReorder = grouping == GroupBy.SECTION
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                StowButton(
-                    text = stringResource(R.string.trip_reorder),
-                    onClick = onReorder,
-                    enabled = canReorder,
-                    style = ButtonStyle.GHOST,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                if (!canReorder) {
-                    MicroLabel(stringResource(R.string.trip_reorder_only_sections), color = c.muted)
-                }
+            // Redni broj stavke je po sekciji, pa dugmeta „Preuredi" u donjoj traci nema
+            // dok se gleda po torbi ili putniku. Rečenica stoji ovde da nestanak ne
+            // izgleda kao kvar.
+            if (grouping != GroupBy.SECTION) {
+                MicroLabel(stringResource(R.string.trip_reorder_only_sections), color = c.muted)
             }
-
             StowButton(
                 text = stringResource(R.string.action_ok),
                 onClick = onDismiss,

@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import rs.lausevic.stow.AppContainer
 import rs.lausevic.stow.R
@@ -238,53 +240,85 @@ fun TripDetailScreen(
                 }
             }
 
-            if (visible.included.isEmpty() && visible.notTaken.isEmpty()) {
-                // Prazna pretraga nije prazno putovanje: „nema ništa na listi" bi bilo
-                // netačno u trenutku kad lista ima trideset stavki a upit nijednu.
-                val filtered = query.isNotBlank() || filter != ItemFilter.ALL
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    EmptyState(
-                        title = stringResource(
-                            if (returning && !filtered) R.string.return_empty_title
-                            else if (filtered) R.string.trip_filter_empty_title
-                            else R.string.trip_empty_title,
-                        ),
-                        body = stringResource(
-                            if (returning && !filtered) R.string.return_empty_body
-                            else if (query.isNotBlank()) R.string.trip_search_empty_body
-                            else if (filtered) R.string.trip_filter_empty_body
-                            else R.string.trip_empty_body,
-                        ),
-                        mark = if (returning) "↩" else "▤",
+            // `weight`, ne `fillMaxSize`: lista koja uzme svu visinu izgura donju traku
+            // sa dugmadima van ekrana. Poruka lebdi unutar ovog okvira, pa staje **iznad**
+            // dugmadi umesto preko njih.
+            Box(Modifier.weight(1f)) {
+                if (visible.included.isEmpty() && visible.notTaken.isEmpty()) {
+                    // Prazna pretraga nije prazno putovanje: „nema ništa na listi" bi bilo
+                    // netačno u trenutku kad lista ima trideset stavki a upit nijednu.
+                    val filtered = query.isNotBlank() || filter != ItemFilter.ALL
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        EmptyState(
+                            title = stringResource(
+                                if (returning && !filtered) R.string.return_empty_title
+                                else if (filtered) R.string.trip_filter_empty_title
+                                else R.string.trip_empty_title,
+                            ),
+                            body = stringResource(
+                                if (returning && !filtered) R.string.return_empty_body
+                                else if (query.isNotBlank()) R.string.trip_search_empty_body
+                                else if (filtered) R.string.trip_filter_empty_body
+                                else R.string.trip_empty_body,
+                            ),
+                            mark = if (returning) "↩" else "▤",
+                        )
+                    }
+                } else {
+                    TripItemList(
+                        sections = sections,
+                        included = visible.included,
+                        notTaken = visible.notTaken,
+                        returning = returning,
+                        // Povratna lista je snimak: grupiše se po sekciji i ne preuređuje se.
+                        grouping = if (returning) GroupBy.SECTION else grouping,
+                        reordering = reordering && !returning,
+                        travellers = travellers,
+                        onToggle = { item ->
+                            scope.launch { container.trips.toggle(item, returning) }
+                        },
+                        onExplain = { explaining = it },
+                        onMarkToBuy = { item ->
+                            scope.launch {
+                                val next = if (item.packStatus == PackStatus.TO_BUY) {
+                                    PackStatus.TO_PACK
+                                } else {
+                                    PackStatus.TO_BUY
+                                }
+                                container.trips.setStatus(item.id, next)
+                            }
+                        },
+                        onAssign = { assigning = it },
+                        onReorder = { sectionId, orderedIds ->
+                            scope.launch { container.trips.reorderItems(sectionId, orderedIds) }
+                        },
                     )
                 }
-            } else {
-                TripItemList(
-                    sections = sections,
-                    included = visible.included,
-                    notTaken = visible.notTaken,
-                    returning = returning,
-                    // Povratna lista je snimak: grupiše se po sekciji i ne preuređuje se.
-                    grouping = if (returning) GroupBy.SECTION else grouping,
-                    reordering = reordering && !returning,
-                    travellers = travellers,
-                    onToggle = { item -> scope.launch { container.trips.toggle(item, returning) } },
-                    onExplain = { explaining = it },
-                    onMarkToBuy = { item ->
-                        scope.launch {
-                            val next = if (item.packStatus == PackStatus.TO_BUY) {
-                                PackStatus.TO_PACK
-                            } else {
-                                PackStatus.TO_BUY
-                            }
-                            container.trips.setStatus(item.id, next)
+
+                message?.let { text ->
+                    // Poruka se skloni sama. Tap je prečica, ne obaveza — nešto što se
+                    // mora otpustiti da bi nestalo je posao, a ovo je samo potvrda.
+                    LaunchedEffect(text) {
+                        delay(3000)
+                        message = null
+                    }
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+                        Column(
+                            Modifier
+                                .padding(16.dp)
+                                .clip(StowShapes.card)
+                                .background(StowTheme.state.ink)
+                                .clickable { message = null }
+                                .padding(horizontal = 16.dp, vertical = 13.dp),
+                        ) {
+                            Text(
+                                text,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = StowTheme.state.onInk,
+                            )
                         }
-                    },
-                    onAssign = { assigning = it },
-                    onReorder = { sectionId, orderedIds ->
-                        scope.launch { container.trips.reorderItems(sectionId, orderedIds) }
-                    },
-                )
+                    }
+                }
             }
 
             Row(
@@ -297,6 +331,14 @@ fun TripDetailScreen(
                     StowButton(
                         text = stringResource(R.string.trip_tidy),
                         onClick = { scope.launch { container.trips.tidy(tripId) } },
+                        style = ButtonStyle.GHOST,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                if (!returning && !reordering && grouping == GroupBy.SECTION) {
+                    StowButton(
+                        text = stringResource(R.string.trip_reorder),
+                        onClick = { reordering = true },
                         style = ButtonStyle.GHOST,
                         modifier = Modifier.weight(1f),
                     )
@@ -340,10 +382,6 @@ fun TripDetailScreen(
         ViewOptionsSheet(
             grouping = grouping,
             onGrouping = { grouping = it },
-            onReorder = {
-                viewOptions = false
-                reordering = true
-            },
             onDismiss = { viewOptions = false },
         )
     }
@@ -371,21 +409,4 @@ fun TripDetailScreen(
         )
     }
 
-    message?.let { text ->
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-            Column(
-                Modifier
-                    // Koren nema insete, pa poruka mora sama da preskoci sistemsku
-                    // navigaciju — inace joj tap ode sistemskom tasteru.
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .padding(16.dp)
-                    .clip(StowShapes.card)
-                    .background(StowTheme.state.ink)
-                    .clickable { message = null }
-                    .padding(horizontal = 16.dp, vertical = 13.dp),
-            ) {
-                Text(text, style = MaterialTheme.typography.bodyMedium, color = StowTheme.state.onInk)
-            }
-        }
-    }
 }

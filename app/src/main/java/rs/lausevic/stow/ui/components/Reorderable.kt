@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -23,35 +24,58 @@ import androidx.compose.ui.zIndex
  * nose značenje (štikliranje i „nabaviti"), a i cela aplikacija stoji na tome da se red
  * ne pomera pod prstom slučajno. Hvataljka postoji samo u režimu preuređivanja.
  *
- * Redovi nisu iste visine — stavka sa opisom i napomenom je viša od gole. Zato se prag
- * ne računa iz jedne konstante nego iz izmerene visine suseda preko koga se prelazi;
- * kad se pređe, isti taj broj se oduzme od pomeraja, pa red ostane pod prstom.
+ * **Redosled se ne dira dok prevlačenje traje.** Prva verzija je zamenjivala mesta u
+ * listi u hodu i time obarala samu sebe: kad dete promeni mesto u kompoziciji, njegov
+ * `pointerInput` dobije drugi ključ, restartuje se i **gest se prekine pre `onDragEnd`**
+ * — pomeranje se vidi na ekranu, ali se nikad ne upiše. Zato ovde kompozicija ostaje u
+ * zatečenom redosledu, a pomeranje je čisto crtanje: vučeni red ide za prstom, redovi
+ * preko kojih je prešao se pomere za njegovu visinu. Nova lista se sklapa tek na kraju,
+ * jednim pozivom [onCommit].
  *
- * Redosled se drži lokalno dok traje prevlačenje i predaje se tek na kraju, jednim
- * pozivom [onCommit]. Upis u bazu po svakoj zameni bi značio N transakcija za jedno
- * prevlačenje i treperenje liste iz `Flow`-a.
+ * Redovi nisu iste visine — stavka sa opisom i napomenom je viša od gole — pa se prag
+ * ne računa iz konstante nego iz izmerene visine suseda preko koga se prelazi.
  */
 @Composable
 fun <T> ReorderableColumn(
     items: List<T>,
-    key: (T) -> Any,
+    keyOf: (T) -> Any,
     onCommit: (List<T>) -> Unit,
     row: @Composable (item: T, index: Int, dragHandle: Modifier) -> Unit,
 ) {
-    val keys = items.map(key)
-    var order by remember(keys) { mutableStateOf(items) }
     val heights = remember { mutableStateMapOf<Any, Int>() }
-    var dragged by remember { mutableStateOf<Any?>(null) }
+    var draggedKey by remember { mutableStateOf<Any?>(null) }
     var offset by remember { mutableFloatStateOf(0f) }
 
+    // `pointerInput` se ne restartuje kad se lista promeni, pa bi zatečena kopija
+    // ostala zauvek u zatvorenju. Ove dve prate tekuće vrednosti.
+    val currentItems by rememberUpdatedState(items)
+    val currentCommit by rememberUpdatedState(onCommit)
+
+    val dragFrom = items.indexOfFirst { keyOf(it) == draggedKey }
+
     Column {
-        order.forEachIndexed { index, item ->
-            val itemKey = key(item)
-            val isDragged = itemKey == dragged
+        items.forEachIndexed { index, item ->
+            val itemKey = keyOf(item)
             Column(
                 Modifier
-                    .zIndex(if (isDragged) 1f else 0f)
-                    .graphicsLayer { translationY = if (isDragged) offset else 0f }
+                    .zIndex(if (index == dragFrom) 1f else 0f)
+                    // Pomeraj se računa ovde, a ne u kompoziciji: čitanje `offset` u
+                    // sloju crtanja znači da prst pomera sliku bez rekompozicije reda.
+                    .graphicsLayer {
+                        val from = currentItems.indexOfFirst { keyOf(it) == draggedKey }
+                        translationY = if (from < 0) {
+                            0f
+                        } else {
+                            val to = targetIndex(currentItems, keyOf, heights, from, offset)
+                            val span = (heights[keyOf(currentItems[from])] ?: 0).toFloat()
+                            when {
+                                index == from -> offset
+                                to > from && index in (from + 1)..to -> -span
+                                to < from && index in to..(from - 1) -> span
+                                else -> 0f
+                            }
+                        }
+                    }
                     .onSizeChanged { heights[itemKey] = it.height },
             ) {
                 row(
@@ -60,39 +84,66 @@ fun <T> ReorderableColumn(
                     Modifier.pointerInput(itemKey) {
                         detectDragGestures(
                             onDragStart = {
-                                dragged = itemKey
+                                draggedKey = itemKey
                                 offset = 0f
                             },
                             onDragEnd = {
-                                dragged = null
+                                val list = currentItems
+                                val from = list.indexOfFirst { keyOf(it) == itemKey }
+                                val to = targetIndex(list, keyOf, heights, from, offset)
+                                draggedKey = null
                                 offset = 0f
-                                onCommit(order)
+                                if (from >= 0 && to != from) {
+                                    currentCommit(
+                                        list.toMutableList().apply { add(to, removeAt(from)) },
+                                    )
+                                }
                             },
                             onDragCancel = {
-                                dragged = null
+                                draggedKey = null
                                 offset = 0f
                             },
                         ) { change, amount ->
                             change.consume()
                             offset += amount.y
-
-                            val at = order.indexOfFirst { key(it) == itemKey }
-                            if (at < 0) return@detectDragGestures
-
-                            val over = when {
-                                offset > 0 && at < order.lastIndex -> at + 1
-                                offset < 0 && at > 0 -> at - 1
-                                else -> return@detectDragGestures
-                            }
-                            val span = heights[key(order[over])]?.toFloat() ?: return@detectDragGestures
-                            if (kotlin.math.abs(offset) < span) return@detectDragGestures
-
-                            order = order.toMutableList().apply { add(over, removeAt(at)) }
-                            offset -= if (offset > 0) span else -span
                         }
                     },
                 )
             }
         }
     }
+}
+
+/**
+ * Gde bi red završio da se prst sada podigne.
+ *
+ * Prelazi se onoliko suseda koliko stane u pomeraj, mereno njihovim stvarnim visinama.
+ * Ako suseda još nismo izmerili, tu se staje — bolje ne pomeriti nego pogoditi.
+ */
+private fun <T> targetIndex(
+    items: List<T>,
+    keyOf: (T) -> Any,
+    heights: Map<Any, Int>,
+    from: Int,
+    offset: Float,
+): Int {
+    if (from < 0) return from
+    var to = from
+    var remaining = offset
+    if (offset > 0) {
+        while (to < items.lastIndex) {
+            val span = heights[keyOf(items[to + 1])] ?: break
+            if (remaining < span) break
+            remaining -= span
+            to++
+        }
+    } else {
+        while (to > 0) {
+            val span = heights[keyOf(items[to - 1])] ?: break
+            if (-remaining < span) break
+            remaining += span
+            to--
+        }
+    }
+    return to
 }

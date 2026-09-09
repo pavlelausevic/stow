@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.BasicTextField
@@ -80,11 +82,11 @@ internal fun TripAddSheet(
     var section by remember(sections) { mutableStateOf(sections.firstOrNull()) }
     var similar by remember { mutableStateOf<List<CatalogItemEntity>>(emptyList()) }
 
-    // Poklapanje sličnih radi isto kao u katalogu: da se „punjač" ne doda drugi put kao
-    // „punjac". Ovde ne brani dodavanje, nego nudi katalošku stavku — s njom dolaze
-    // torba, napomena i pravilo količine.
+    // Pretraga po delu naziva, ne poklapanje sličnih: dok se kuca traži se **postojeća**
+    // stavka, a ne odgovor na pitanje „jesi li ovo već uneo?". Uzeta iz kataloga, stavka
+    // sa sobom nosi torbu, napomenu i pravilo količine.
     LaunchedEffect(name) {
-        similar = if (name.trim().length >= 3) container.catalog.similarTo(name) else emptyList()
+        similar = if (name.trim().length >= 2) container.catalog.matching(name) else emptyList()
     }
 
     val addedText = stringResource(R.string.trip_add_done)
@@ -113,7 +115,7 @@ internal fun TripAddSheet(
         Column(
             Modifier
                 .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.navigationBars)
+                .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars))
                 .clip(StowShapes.sheet)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 18.dp, vertical = 18.dp),
@@ -158,12 +160,12 @@ internal fun TripAddSheet(
 
             if (similar.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    MicroLabel(stringResource(R.string.fuzzy_title), color = c.alert)
+                    MicroLabel(stringResource(R.string.trip_add_from_catalogue))
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         items(similar.size) { index ->
                             val candidate = similar[index]
                             Box(Modifier.clickable { add(candidate, candidate.name) }) {
-                                Pill(candidate.name, tone = PillTone.ALERT)
+                                Pill(candidate.name, tone = PillTone.ACCENT)
                             }
                         }
                     }

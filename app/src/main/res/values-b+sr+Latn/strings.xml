@@ -52,6 +52,7 @@
     <string name="section_not_taken">Nije poneto · ne broji se</string>
     <string name="trip_tidy">Sredi</string>
     <string name="trip_add_often">Često nosiš</string>
+    <string name="trip_add_from_catalogue">Iz kataloga</string>
     <string name="trip_add_section">Sekcija</string>
     <string name="trip_add_kind">Vrsta</string>
     <string name="trip_add_done">Dodato</string>
@@ -61,7 +62,7 @@
     <string name="trip_reorder">Preuredi</string>
     <string name="trip_reorder_done">Gotovo</string>
     <string name="trip_reorder_hint">Prevlači za hvataljku</string>
-    <string name="trip_reorder_only_sections">Redosled se pamti po sekciji, pa preuređivanje traži pogled po sekcijama</string>
+    <string name="trip_reorder_only_sections">Preuređivanje traži pogled po sekciji</string>
     <string name="trip_tidy_explained">Prebacuje spakovano na dno, jednom</string>
     <string name="trip_uncheck_all">Skini sve kvačice</string>
     <string name="trip_complete_section">Označi celu sekciju</string>

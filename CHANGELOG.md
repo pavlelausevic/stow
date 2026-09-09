@@ -30,6 +30,8 @@ First version.
   downscaled, and stripped of EXIF.
 - PDF export whose checkboxes are real AcroForm fields, on a narrow page sized for a phone
   screen or on A4 for printing.
+- Saving a PDF opens the system document picker and writes the file where you chose;
+  sharing hands it to another app. Neither asks for a permission.
 - Full JSON export and import; additive, never deleting, matched by UUID.
 - Home-screen widget and a launcher shortcut.
 - Serbian (Latin) and English, with an in-app language override.

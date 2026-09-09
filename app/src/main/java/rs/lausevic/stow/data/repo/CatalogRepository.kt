@@ -48,6 +48,23 @@ class CatalogRepository(
         return ids.mapNotNull { id -> active.firstOrNull { it.id == id } }
     }
 
+    /**
+     * Katalog po delu naziva, bez dijakritike — za **biranje**, ne za otkrivanje duplikata.
+     *
+     * [similarTo] odgovara na pitanje „jesi li ovo već uneo?" i zato traži skoro identičan
+     * naziv (Levenštajn ≥ 0,82). Kad se stavka dodaje na putovanje pitanje je drugo —
+     * „koja je ovo od postojećih?" — i tu prefiks radi ono što fuzzy ne može: „punj"
+     * nađe „punjač", a „phon" nađe „Phone" i „Phone charger".
+     */
+    suspend fun matching(query: String, limit: Int = 6): List<CatalogItemEntity> {
+        val needle = TextMatching.normalize(query)
+        if (needle.isEmpty()) return emptyList()
+        return catalogDao.allActive()
+            .filter { it.normalizedName.contains(needle) }
+            .sortedByDescending { it.timesUsed }
+            .take(limit)
+    }
+
     suspend fun add(
         name: String,
         kind: ItemKind,
