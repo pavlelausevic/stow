@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -204,7 +206,13 @@ fun StowScreen(
                 .weight(1f)
                 .then(
                     if (bottomBar == null) {
-                        Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+                        // `ime` uz `navigationBars`, ne umesto njih: `union` uzima veći
+                        // inset po strani, pa tastatura podigne sadržaj a bez nje ostaje
+                        // samo razmak za sistemsku navigaciju. Bez ovoga su dugmad
+                        // čarobnjaka i polje pretrage završavali ispod tastature.
+                        Modifier.windowInsetsPadding(
+                            WindowInsets.ime.union(WindowInsets.navigationBars),
+                        )
                     } else {
                         Modifier
                     },
