@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 First version.
 
 ### The app
+- Catalogue extended from 140 to 164 items after a real trip: peripherals and a phone dock, cold-weather clothing, more pharmacy items, a thermos, prescription glasses, and six more before-leaving tasks. All are opt-in (`core: false`), so default lists are unchanged; `seedVersion` 2 adds them to existing catalogues without touching anything the user edited.
 - Personal catalogue of items and tasks, with fuzzy matching on add so near-duplicates do
   not accumulate, usage counters, and a "not used in over a year" sort.
 - Trips as deep-copied snapshots from two built-in templates, a past trip, or nothing.

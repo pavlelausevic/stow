@@ -1,5 +1,5 @@
 {
-  "seedVersion": 1,
+  "seedVersion": 2,
   "_comment": "Naziv se cuva dvojezicno i razresava pri citanju dok stavka nosi seedKey. Cim je korisnik izmeni, seedKey se brise i naziv postaje njegov. core=false znaci da stavka ulazi samo preko eksplicitnog pravila carobnjaka, ne kad se doda cela sekcija.",
 
   "travellers": [
@@ -52,6 +52,11 @@
     { "key": "headphones", "sr": "Slušalice", "en": "Headphones", "section": "electronics", "bag": "PERSONAL", "rule": { "type": "FIXED", "per": 1 } },
     { "key": "card_reader", "sr": "Čitač memorijskih kartica", "en": "Memory card reader", "section": "electronics", "bag": "PERSONAL", "rule": { "type": "FIXED", "per": 1 }, "core": false },
     { "key": "car_charger", "sr": "Punjač za auto 12V", "en": "12V car charger", "section": "electronics", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "mouse", "sr": "Miš", "en": "Mouse", "section": "electronics", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "phone_stand", "sr": "Stoni držač za telefon", "en": "Desk phone stand", "section": "electronics", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "phone_dock", "sr": "Dok za telefon (monitor ili TV)", "en": "Phone dock for a monitor or TV", "section": "electronics", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "external_ssd", "sr": "Spoljni SSD i kabl za njega", "en": "External SSD and its cable", "section": "electronics", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "hdmi_dp_adapter", "sr": "Adapter HDMI → DisplayPort", "en": "HDMI to DisplayPort adapter", "section": "electronics", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
 
     { "key": "toothbrush", "sr": "Četkica za zube i punjač", "en": "Toothbrush and its charger", "section": "toiletries", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 } },
     { "key": "toothpaste", "sr": "Pasta za zube", "en": "Toothpaste", "section": "toiletries", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 } },
@@ -70,6 +75,7 @@
     { "key": "lip_balm", "sr": "Balzam za usne", "en": "Lip balm", "section": "toiletries", "bag": "PERSONAL", "rule": { "type": "FIXED", "per": 1 } },
     { "key": "sunscreen", "sr": "Krema za sunce", "en": "Sunscreen", "section": "toiletries", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
     { "key": "panthenol", "sr": "Pantenol", "en": "Panthenol", "section": "toiletries", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "comb", "sr": "Češalj", "en": "Comb", "section": "toiletries", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
 
     { "key": "prescription_meds", "sr": "Lekovi na recept", "en": "Prescription medication", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "UNSPECIFIED" }, "noteSr": "Poneti i fotografiju recepta", "noteEn": "Bring a photo of the prescription too" },
     { "key": "painkillers", "sr": "Lek protiv bolova", "en": "Painkillers", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 } },
@@ -80,6 +86,12 @@
     { "key": "probiotic", "sr": "Probiotik", "en": "Probiotic", "section": "pharmacy", "bag": "CHECKED", "rule": { "type": "UNSPECIFIED" } },
     { "key": "plasters", "sr": "Flasteri", "en": "Plasters", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "UNSPECIFIED" } },
     { "key": "blister_plasters", "sr": "Anti-žulj flasteri", "en": "Blister plasters", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "UNSPECIFIED" }, "core": false },
+    { "key": "supplements", "sr": "Multivitamini i suplementi", "en": "Multivitamins and supplements", "section": "pharmacy", "bag": "CHECKED", "rule": { "type": "UNSPECIFIED" }, "core": false },
+    { "key": "nasal_drops", "sr": "Kapi za nos", "en": "Nasal drops", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "eye_drops", "sr": "Kapi za oči", "en": "Eye drops", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "antibiotic_ointment", "sr": "Antibiotska mast", "en": "Antibiotic ointment", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "aspirin", "sr": "Aspirin", "en": "Aspirin", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "ibuprofen", "sr": "Ibuprofen", "en": "Ibuprofen", "section": "pharmacy", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
 
     { "key": "underwear", "sr": "Donji veš", "en": "Underwear", "section": "clothing", "bag": "CHECKED", "rule": { "type": "PER_NIGHTS", "per": 1, "plus": 1, "cap": 10 } },
     { "key": "socks", "sr": "Čarape", "en": "Socks", "section": "clothing", "bag": "CHECKED", "rule": { "type": "PER_NIGHTS", "per": 1, "plus": 1, "cap": 10 } },
@@ -91,6 +103,10 @@
     { "key": "swimsuit", "sr": "Kupaći kostim", "en": "Swimsuit", "section": "clothing", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
     { "key": "shirt", "sr": "Košulja", "en": "Shirt", "section": "clothing", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
     { "key": "gym_shorts", "sr": "Šorts za teretanu", "en": "Gym shorts", "section": "clothing", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "gloves", "sr": "Rukavice", "en": "Gloves", "section": "clothing", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false, "noteSr": "Pune, sa prstima", "noteEn": "Full-finger gloves" },
+    { "key": "sweatpants", "sr": "Trenerke", "en": "Sweatpants", "section": "clothing", "bag": "CHECKED", "rule": { "type": "UNSPECIFIED" }, "core": false },
+    { "key": "jumpers", "sr": "Džemperi", "en": "Jumpers", "section": "clothing", "bag": "CHECKED", "rule": { "type": "UNSPECIFIED" }, "core": false },
+    { "key": "collared_shirt", "sr": "Majica sa kragnom", "en": "Collared shirt", "section": "clothing", "bag": "CHECKED", "rule": { "type": "UNSPECIFIED" }, "core": false },
 
     { "key": "worn_in_trainers", "sr": "Razgažene patike", "en": "Broken-in trainers", "section": "footwear", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 } },
     { "key": "nicer_shoes", "sr": "Lepše cipele ili patike za veče", "en": "Nicer shoes for the evening", "section": "footwear", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
@@ -112,6 +128,8 @@
     { "key": "gym_towel", "sr": "Peškir za teretanu", "en": "Gym towel", "section": "small_things", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
     { "key": "water_bottle", "sr": "Sklopiva flaša za vodu", "en": "Foldable water bottle", "section": "small_things", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
     { "key": "backpack_15l", "sr": "Sklopivi ranac 15L", "en": "Foldable 15L backpack", "section": "small_things", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "thermos", "sr": "Termos", "en": "Thermos flask", "section": "small_things", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 }, "core": false },
+    { "key": "prescription_glasses", "sr": "Naočare za vid", "en": "Prescription glasses", "section": "small_things", "bag": "PERSONAL", "rule": { "type": "FIXED", "per": 1 }, "core": false },
 
     { "key": "power_strip", "sr": "Produžni kabl sa više utičnica", "en": "Power strip", "section": "hotel_extra", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 } },
     { "key": "day_bag", "sr": "Sklopiva kesa za dnevni izlazak", "en": "Foldable day bag", "section": "hotel_extra", "bag": "CHECKED", "rule": { "type": "FIXED", "per": 1 } },
@@ -173,6 +191,12 @@
     { "key": "task_bank", "sr": "Najaviti banci putovanje", "en": "Tell the bank about the trip", "section": "before_leaving", "kind": "TASK" },
     { "key": "task_key", "sr": "Ostaviti ključ komšiji", "en": "Leave a key with the neighbour", "section": "before_leaving", "kind": "TASK" },
     { "key": "task_light_timer", "sr": "Uključiti tajmer za svetlo", "en": "Set the light timer", "section": "before_leaving", "kind": "TASK" },
+    { "key": "task_radiators", "sr": "Zavrnuti radijatore (ako je grejna sezona)", "en": "Turn down the radiators (in heating season)", "section": "before_leaving", "kind": "TASK", "core": false },
+    { "key": "task_freeze_food", "sr": "Zalediti hranu koja bi se pokvarila", "en": "Freeze food that would spoil", "section": "before_leaving", "kind": "TASK", "core": false },
+    { "key": "task_washer", "sr": "Zavrnuti slavinu i isključiti veš mašinu iz struje", "en": "Turn off the washing-machine tap and unplug it", "section": "before_leaving", "kind": "TASK", "core": false },
+    { "key": "task_media_unplug", "sr": "Isključiti iz struje TV, pojačalo, boksove i switch", "en": "Unplug the TV, amplifier, set-top boxes and switch", "section": "before_leaving", "kind": "TASK", "core": false },
+    { "key": "task_terrarium", "sr": "Zaliti ili proveriti terarijum", "en": "Water or check the terrarium", "section": "before_leaving", "kind": "TASK", "core": false },
+    { "key": "task_offline_media", "sr": "Preuzeti muziku i serije za offline", "en": "Download music and series for offline use", "section": "before_leaving", "kind": "TASK", "core": false },
 
     { "key": "back_chargers", "sr": "Punjači iz utičnica", "en": "Chargers from the sockets", "section": "collect_before_leaving", "bag": "CARRY_ON", "rule": { "type": "UNSPECIFIED" } },
     { "key": "back_bedside_charger", "sr": "Punjač telefona pored kreveta", "en": "Phone charger by the bed", "section": "collect_before_leaving", "bag": "CARRY_ON", "rule": { "type": "FIXED", "per": 1 } },
